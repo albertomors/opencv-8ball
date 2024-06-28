@@ -17,12 +17,17 @@
 
     cv::Mat frame;
     std::vector<cv::Point> edgePoints;
+    //to have the area
+    std::vector<cv::Point> fieldArea;
     
     public:
 
-    explicit fieldDetector(const cv::Mat currentFrame);
-
+    explicit fieldDetector(const cv::Mat& currentFrame); //i added &
     void detectField();
+
+    // method to retrieve detected points and area
+    std::vector<cv::Point> getEdgePoints() const;
+    std::vector<cv::Point> getFieldArea() const;
 
   };
 #endif

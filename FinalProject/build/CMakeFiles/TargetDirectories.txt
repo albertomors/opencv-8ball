@@ -1,0 +1,4 @@
+/Users/eleonorafresco/Documents/GitFolder/CV_project/cv-lab/FinalProject/build/CMakeFiles/fieldDetection.dir
+/Users/eleonorafresco/Documents/GitFolder/CV_project/cv-lab/FinalProject/build/CMakeFiles/CVproject.dir
+/Users/eleonorafresco/Documents/GitFolder/CV_project/cv-lab/FinalProject/build/CMakeFiles/edit_cache.dir
+/Users/eleonorafresco/Documents/GitFolder/CV_project/cv-lab/FinalProject/build/CMakeFiles/rebuild_cache.dir
