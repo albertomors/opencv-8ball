@@ -2,7 +2,8 @@
 
 int main() {
     // Load a sample frame (for example, a frame from a video or an image of a billiard table)
-    cv::Mat frame = cv::imread("../../FinalProject/Dataset/game1_clip1/frames/frame_first.png");
+    //cv::Mat frame = cv::imread("../../FinalProject/Dataset/game1_clip1/frames/frame_first.png");
+    cv::Mat frame = cv::imread("Dataset/game1_clip1/frames/frame_first.png");
 
     // Check if the image is loaded successfully
     if (frame.empty()) {
