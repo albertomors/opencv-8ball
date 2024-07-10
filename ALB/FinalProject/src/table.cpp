@@ -1,8 +1,17 @@
+/*
+AUTHOR: Morselli Alberto 
+FILE: table.cpp
+
+-TODO description
+*/
+
 #include "table.h"
 
-cv::Scalar get_dominant_color(const cv::Mat& img) {
+tableDetector::tableDetector(){}
+
+cv::Scalar tableDetector::get_dominant_color() {
     cv::Mat hsv_img;
-    cv::cvtColor(img, hsv_img, cv::COLOR_BGR2HSV);
+    cv::cvtColor(this->origin_frame, hsv_img, cv::COLOR_BGR2HSV);
 
     int h_bins = 64;
     int bins[] = {h_bins};
@@ -21,9 +30,9 @@ cv::Scalar get_dominant_color(const cv::Mat& img) {
     return cv::Scalar(hue_dominant, 127, 127); //mid-value for sat and brightness
 }
 
-cv::Mat treshold_mask(const cv::Mat& img, const cv::Scalar& color) {
+cv::Mat tableDetector::treshold_mask(const cv::Scalar& color) {
     cv::Mat hsv_img, mask;
-    cv::cvtColor(img, hsv_img, cv::COLOR_BGR2HSV);
+    cv::cvtColor(this->origin_frame, hsv_img, cv::COLOR_BGR2HSV);
 
     //accepted ranges - HANDTUNED
     cv::Scalar lower_bound(color[0] - 10, 100, 60);
@@ -36,7 +45,7 @@ cv::Mat treshold_mask(const cv::Mat& img, const cv::Scalar& color) {
     return mask;
 }
 
-cv::Mat find_largest_comp(const cv::Mat& mask) {
+cv::Mat tableDetector::find_largest_comp(const cv::Mat& mask) {
     cv::Mat labels, stats, centroids;
 
     /* cv::imshow("before morph", mask);
@@ -49,7 +58,7 @@ cv::Mat find_largest_comp(const cv::Mat& mask) {
     /* cv::imshow("after morph", mask);
     cv::waitKey(0); */
 
-    int  num = connectedComponentsWithStats(mask, labels, stats, centroids);
+    int num = connectedComponentsWithStats(mask, labels, stats, centroids);
 
     //find the largest component excluding background
     int curr_largest = 1;
@@ -62,14 +71,14 @@ cv::Mat find_largest_comp(const cv::Mat& mask) {
     }}
 
     //create the mask
-    cv::Mat largest_mask = (labels == curr_largest);
+    cv::Mat seg_mask = (labels == curr_largest);
     /* cv::imshow("largest component", largest_mask);
     cv::waitKey(0); */
-
-    return largest_mask;
+    
+    return seg_mask;
 }
 
-std::vector<cv::Point> find_borders(const cv::Mat& mask) {
+std::vector<cv::Point> tableDetector::find_borders(const cv::Mat& mask) {
     //find contour of closed area
     std::vector<std::vector<cv::Point>> contours;
     cv::findContours(mask, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
@@ -89,13 +98,20 @@ std::vector<cv::Point> find_borders(const cv::Mat& mask) {
     return hull;
 }
 
-cv::Mat highlight_borders(const cv::Mat& img){
-    cv::Mat edited = img.clone();
-    cv::Scalar table_color = get_dominant_color(img);
-    cv::Mat table_mask = treshold_mask(img, table_color);
-    cv::Mat table = find_largest_comp(table_mask);
-    std::vector<cv::Point> borders = find_borders(table);
+void tableDetector::find_table(const cv::Mat& img){
+    this->origin_frame = img.clone();
+    cv::Scalar table_color = this->get_dominant_color();
+    cv::Mat tresholded = this->treshold_mask(table_color);
+    this->seg_mask = this->find_largest_comp(tresholded);
+    this->borders = this->find_borders(seg_mask);
 
-    cv::polylines(edited, borders, true, cv::Scalar(0, 255, 255), 2);
+    this->ROI = cv::Mat::zeros(this->origin_frame.size(), CV_8UC1);
+    cv::Mat hull_mat(this->borders);
+    cv::fillConvexPoly(this->ROI, hull_mat, cv::Scalar(255));
+}
+
+cv::Mat tableDetector::draw_borders(const cv::Mat& img){
+    cv::Mat edited = img.clone();
+    cv::polylines(edited, this->borders, true, cv::Scalar(0, 255, 255), 2);
     return edited;
 }

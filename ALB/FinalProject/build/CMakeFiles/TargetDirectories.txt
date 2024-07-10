@@ -1,3 +1,0 @@
-/home/local/morsalb13133/Desktop/FinalProject/build/CMakeFiles/rebuild_cache.dir
-/home/local/morsalb13133/Desktop/FinalProject/build/CMakeFiles/edit_cache.dir
-/home/local/morsalb13133/Desktop/FinalProject/build/CMakeFiles/CVproject.dir

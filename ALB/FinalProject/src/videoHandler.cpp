@@ -111,16 +111,20 @@ void videoHandler::process_video(int MIDSTEP_flag){
 
     int i = 1;
     cv::Mat frame_i;
+    tableDetector table = tableDetector();
 
     while (i <= tot_frames) {
         capture >> frame_i;
         
         //elaborate video - call frameHandler --------------------
-
-        cv::Mat ret_frame = highlight_borders(frame_i);
+        
+        table.find_table(frame_i);
+        cv::Mat drawed = table.draw_borders(frame_i);
         if (MIDSTEP_flag){
             std::cout << "frame " << i << "/" << tot_frames << std::endl;
-            cv::namedWindow("frame_i"); cv::imshow("frame_i", ret_frame);
+            cv::namedWindow("frame_i"); cv::imshow("frame_i", drawed);
+            cv::namedWindow("seg_mask"); cv::imshow("seg_mask", table.seg_mask);
+            cv::namedWindow("ROI"); cv::imshow("ROI", table.ROI);
             cv::waitKey(1);
         }
 
@@ -138,7 +142,7 @@ void videoHandler::process_video(int MIDSTEP_flag){
             cv::destroyWindow("mask");
         }
 
-        writer.write(ret_frame);
+        writer.write(drawed);
         i++;
     }
 
