@@ -10,6 +10,7 @@ FILE: videoHandler.cpp
 
 #include "videoHandler.h"
 #include "metrics.h"
+#include "table.h"
 
 videoHandler::videoHandler(const std::string& folder_name) {
     this->errors = false;
@@ -116,19 +117,17 @@ void videoHandler::process_video(int MIDSTEP_flag){
         
         //elaborate video - call frameHandler --------------------
 
+        cv::Mat ret_frame = highlight_borders(frame_i);
         if (MIDSTEP_flag){
             std::cout << "frame " << i << "/" << tot_frames << std::endl;
-            cv::namedWindow("frame_i"); cv::imshow("frame_i", frame_i);
+            cv::namedWindow("frame_i"); cv::imshow("frame_i", ret_frame);
             cv::waitKey(1);
         }
 
-        cv::cvtColor(frame_i, frame_i, cv::COLOR_BGR2GRAY);
-        cv::cvtColor(frame_i, frame_i, cv::COLOR_GRAY2BGR);
-        cv::Mat ret_frame = frame_i.clone();
         bool RET_flag = (i == 1 || i == tot_frames) ? true : false;
-        cv::Mat mask = (i == 1) ? ffirst_mask : flast_mask;
-        mask.row(300).setTo(cv::Scalar(3,3,3));
-        mask.row(301).setTo(cv::Scalar(3,3,3));
+        cv::Mat mask;
+        if(RET_flag)
+            mask = (i == 1) ? ffirst_mask : flast_mask;
 
         // -------------------------------------------------------
 
