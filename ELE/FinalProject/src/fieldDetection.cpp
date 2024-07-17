@@ -219,7 +219,7 @@ void fieldDetector::detectField() {
 
 
     // Hough Lines Probabilistic
-    cv::Mat HoughMask = cv::Mat::zeros(largestComponentMask.size(), CV_8UC1);
+    /*cv::Mat HoughMask = cv::Mat::zeros(largestComponentMask.size(), CV_8UC1);
     std::vector<cv::Vec4i> linesP;
     cv::HoughLinesP(largestComponentMask, linesP, 1, CV_PI / 180, 1, 20, 40); //rho, theta, votes 3, minlinelength 50, maxlinegap 50
     
@@ -227,7 +227,7 @@ void fieldDetector::detectField() {
         cv::Vec4i l = linesP[i];
         cv::line(result, cv::Point(l[0], l[1]), cv::Point(l[2], l[3]), cv::Scalar(255, 0, 0), 3, cv::LINE_AA);
         cv::line(HoughMask, cv::Point(l[0], l[1]), cv::Point(l[2], l[3]), cv::Scalar(255), 3, cv::LINE_AA);
-    }
+    }*/
 
     // Keep only strongest lines
     /*double minLineLength = 10.0; //50
@@ -247,7 +247,7 @@ void fieldDetector::detectField() {
         //cv::line(largestComponentMask, cv::Point(l[0], l[1]), cv::Point(l[2], l[3]), cv::Scalar(255, 0, 0), 3, cv::LINE_AA);
     }*/
 
-    cv::imshow("Mask HoughP", HoughMask); //DEBUG
+    //cv::imshow("Mask HoughP", HoughMask); //DEBUG
 
     //std::vector<std::vector<cv::Point>> contourMaskRefined;
     //cv::findContours(HoughMask, contourMaskRefined, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE); //anzichè su largestcomponent
@@ -297,7 +297,8 @@ void fieldDetector::detectField() {
         }
     }*/
     // Use method
-    std::vector<cv::Point> maxContourFinal = findMaxContour(HoughMask);
+    //std::vector<cv::Point> maxContourFinal = findMaxContour(HoughMask);
+    std::vector<cv::Point> maxContourFinal = findMaxContour(largestComponentMask);
 
     // Approximate the largest contour to a polygon
     std::vector<cv::Point> approxFinal;
