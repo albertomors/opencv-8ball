@@ -125,10 +125,52 @@ CMakeFiles/CVproject.dir/src/table.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/CVproject.dir/src/table.cpp.s"
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/sofiagirardello/Desktop/FinalProject/ALB/FinalProject/src/table.cpp -o CMakeFiles/CVproject.dir/src/table.cpp.s
 
+CMakeFiles/CVproject.dir/src/trajectoryProjection_copy_2.cpp.o: CMakeFiles/CVproject.dir/flags.make
+CMakeFiles/CVproject.dir/src/trajectoryProjection_copy_2.cpp.o: /Users/sofiagirardello/Desktop/FinalProject/ALB/FinalProject/src/trajectoryProjection\ copy\ 2.cpp
+CMakeFiles/CVproject.dir/src/trajectoryProjection_copy_2.cpp.o: CMakeFiles/CVproject.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/sofiagirardello/Desktop/FinalProject/ALB/FinalProject/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/CVproject.dir/src/trajectoryProjection_copy_2.cpp.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/CVproject.dir/src/trajectoryProjection_copy_2.cpp.o -MF CMakeFiles/CVproject.dir/src/trajectoryProjection_copy_2.cpp.o.d -o CMakeFiles/CVproject.dir/src/trajectoryProjection_copy_2.cpp.o -c "/Users/sofiagirardello/Desktop/FinalProject/ALB/FinalProject/src/trajectoryProjection copy 2.cpp"
+
+CMakeFiles/CVproject.dir/src/trajectoryProjection_copy_2.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/CVproject.dir/src/trajectoryProjection_copy_2.cpp.i"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/Users/sofiagirardello/Desktop/FinalProject/ALB/FinalProject/src/trajectoryProjection copy 2.cpp" > CMakeFiles/CVproject.dir/src/trajectoryProjection_copy_2.cpp.i
+
+CMakeFiles/CVproject.dir/src/trajectoryProjection_copy_2.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/CVproject.dir/src/trajectoryProjection_copy_2.cpp.s"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/Users/sofiagirardello/Desktop/FinalProject/ALB/FinalProject/src/trajectoryProjection copy 2.cpp" -o CMakeFiles/CVproject.dir/src/trajectoryProjection_copy_2.cpp.s
+
+CMakeFiles/CVproject.dir/src/trajectoryProjection_copy.cpp.o: CMakeFiles/CVproject.dir/flags.make
+CMakeFiles/CVproject.dir/src/trajectoryProjection_copy.cpp.o: /Users/sofiagirardello/Desktop/FinalProject/ALB/FinalProject/src/trajectoryProjection\ copy.cpp
+CMakeFiles/CVproject.dir/src/trajectoryProjection_copy.cpp.o: CMakeFiles/CVproject.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/sofiagirardello/Desktop/FinalProject/ALB/FinalProject/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/CVproject.dir/src/trajectoryProjection_copy.cpp.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/CVproject.dir/src/trajectoryProjection_copy.cpp.o -MF CMakeFiles/CVproject.dir/src/trajectoryProjection_copy.cpp.o.d -o CMakeFiles/CVproject.dir/src/trajectoryProjection_copy.cpp.o -c "/Users/sofiagirardello/Desktop/FinalProject/ALB/FinalProject/src/trajectoryProjection copy.cpp"
+
+CMakeFiles/CVproject.dir/src/trajectoryProjection_copy.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/CVproject.dir/src/trajectoryProjection_copy.cpp.i"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/Users/sofiagirardello/Desktop/FinalProject/ALB/FinalProject/src/trajectoryProjection copy.cpp" > CMakeFiles/CVproject.dir/src/trajectoryProjection_copy.cpp.i
+
+CMakeFiles/CVproject.dir/src/trajectoryProjection_copy.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/CVproject.dir/src/trajectoryProjection_copy.cpp.s"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/Users/sofiagirardello/Desktop/FinalProject/ALB/FinalProject/src/trajectoryProjection copy.cpp" -o CMakeFiles/CVproject.dir/src/trajectoryProjection_copy.cpp.s
+
+CMakeFiles/CVproject.dir/src/trajectoryProjection.cpp.o: CMakeFiles/CVproject.dir/flags.make
+CMakeFiles/CVproject.dir/src/trajectoryProjection.cpp.o: /Users/sofiagirardello/Desktop/FinalProject/ALB/FinalProject/src/trajectoryProjection.cpp
+CMakeFiles/CVproject.dir/src/trajectoryProjection.cpp.o: CMakeFiles/CVproject.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/sofiagirardello/Desktop/FinalProject/ALB/FinalProject/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/CVproject.dir/src/trajectoryProjection.cpp.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/CVproject.dir/src/trajectoryProjection.cpp.o -MF CMakeFiles/CVproject.dir/src/trajectoryProjection.cpp.o.d -o CMakeFiles/CVproject.dir/src/trajectoryProjection.cpp.o -c /Users/sofiagirardello/Desktop/FinalProject/ALB/FinalProject/src/trajectoryProjection.cpp
+
+CMakeFiles/CVproject.dir/src/trajectoryProjection.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/CVproject.dir/src/trajectoryProjection.cpp.i"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/sofiagirardello/Desktop/FinalProject/ALB/FinalProject/src/trajectoryProjection.cpp > CMakeFiles/CVproject.dir/src/trajectoryProjection.cpp.i
+
+CMakeFiles/CVproject.dir/src/trajectoryProjection.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/CVproject.dir/src/trajectoryProjection.cpp.s"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/sofiagirardello/Desktop/FinalProject/ALB/FinalProject/src/trajectoryProjection.cpp -o CMakeFiles/CVproject.dir/src/trajectoryProjection.cpp.s
+
 CMakeFiles/CVproject.dir/src/trajectoryTracking.cpp.o: CMakeFiles/CVproject.dir/flags.make
 CMakeFiles/CVproject.dir/src/trajectoryTracking.cpp.o: /Users/sofiagirardello/Desktop/FinalProject/ALB/FinalProject/src/trajectoryTracking.cpp
 CMakeFiles/CVproject.dir/src/trajectoryTracking.cpp.o: CMakeFiles/CVproject.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/sofiagirardello/Desktop/FinalProject/ALB/FinalProject/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/CVproject.dir/src/trajectoryTracking.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/sofiagirardello/Desktop/FinalProject/ALB/FinalProject/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/CVproject.dir/src/trajectoryTracking.cpp.o"
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/CVproject.dir/src/trajectoryTracking.cpp.o -MF CMakeFiles/CVproject.dir/src/trajectoryTracking.cpp.o.d -o CMakeFiles/CVproject.dir/src/trajectoryTracking.cpp.o -c /Users/sofiagirardello/Desktop/FinalProject/ALB/FinalProject/src/trajectoryTracking.cpp
 
 CMakeFiles/CVproject.dir/src/trajectoryTracking.cpp.i: cmake_force
@@ -142,7 +184,7 @@ CMakeFiles/CVproject.dir/src/trajectoryTracking.cpp.s: cmake_force
 CMakeFiles/CVproject.dir/src/videoHandler.cpp.o: CMakeFiles/CVproject.dir/flags.make
 CMakeFiles/CVproject.dir/src/videoHandler.cpp.o: /Users/sofiagirardello/Desktop/FinalProject/ALB/FinalProject/src/videoHandler.cpp
 CMakeFiles/CVproject.dir/src/videoHandler.cpp.o: CMakeFiles/CVproject.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/sofiagirardello/Desktop/FinalProject/ALB/FinalProject/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/CVproject.dir/src/videoHandler.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/sofiagirardello/Desktop/FinalProject/ALB/FinalProject/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/CVproject.dir/src/videoHandler.cpp.o"
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/CVproject.dir/src/videoHandler.cpp.o -MF CMakeFiles/CVproject.dir/src/videoHandler.cpp.o.d -o CMakeFiles/CVproject.dir/src/videoHandler.cpp.o -c /Users/sofiagirardello/Desktop/FinalProject/ALB/FinalProject/src/videoHandler.cpp
 
 CMakeFiles/CVproject.dir/src/videoHandler.cpp.i: cmake_force
@@ -159,6 +201,9 @@ CVproject_OBJECTS = \
 "CMakeFiles/CVproject.dir/src/main.cpp.o" \
 "CMakeFiles/CVproject.dir/src/metrics.cpp.o" \
 "CMakeFiles/CVproject.dir/src/table.cpp.o" \
+"CMakeFiles/CVproject.dir/src/trajectoryProjection_copy_2.cpp.o" \
+"CMakeFiles/CVproject.dir/src/trajectoryProjection_copy.cpp.o" \
+"CMakeFiles/CVproject.dir/src/trajectoryProjection.cpp.o" \
 "CMakeFiles/CVproject.dir/src/trajectoryTracking.cpp.o" \
 "CMakeFiles/CVproject.dir/src/videoHandler.cpp.o"
 
@@ -169,6 +214,9 @@ CVproject: CMakeFiles/CVproject.dir/src/ballDetection.cpp.o
 CVproject: CMakeFiles/CVproject.dir/src/main.cpp.o
 CVproject: CMakeFiles/CVproject.dir/src/metrics.cpp.o
 CVproject: CMakeFiles/CVproject.dir/src/table.cpp.o
+CVproject: CMakeFiles/CVproject.dir/src/trajectoryProjection_copy_2.cpp.o
+CVproject: CMakeFiles/CVproject.dir/src/trajectoryProjection_copy.cpp.o
+CVproject: CMakeFiles/CVproject.dir/src/trajectoryProjection.cpp.o
 CVproject: CMakeFiles/CVproject.dir/src/trajectoryTracking.cpp.o
 CVproject: CMakeFiles/CVproject.dir/src/videoHandler.cpp.o
 CVproject: CMakeFiles/CVproject.dir/build.make
@@ -229,7 +277,7 @@ CVproject: /opt/homebrew/lib/libopencv_photo.4.10.0.dylib
 CVproject: /opt/homebrew/lib/libopencv_imgproc.4.10.0.dylib
 CVproject: /opt/homebrew/lib/libopencv_core.4.10.0.dylib
 CVproject: CMakeFiles/CVproject.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/sofiagirardello/Desktop/FinalProject/ALB/FinalProject/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX executable CVproject"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/sofiagirardello/Desktop/FinalProject/ALB/FinalProject/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Linking CXX executable CVproject"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/CVproject.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

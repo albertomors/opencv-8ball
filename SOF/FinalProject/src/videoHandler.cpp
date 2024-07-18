@@ -13,6 +13,7 @@ FILE: videoHandler.cpp
 #include "table.h"
 #include "ballDetection.h"
 #include "trajectoryTracking.h"
+#include "trajectoryProjection.h"
 
 videoHandler::videoHandler(const std::string& folder_name) {
     this->errors = false;
@@ -116,6 +117,7 @@ void videoHandler::process_video(int MIDSTEP_flag){
     tableDetector table = tableDetector();
     ballDetector balls_detector = ballDetector();
     trajectoryTracker tracker = trajectoryTracker();
+    trajectoryProjecter projecter = trajectoryProjecter();
 
     while (i <= tot_frames) {
         capture >> frame_i;
@@ -146,13 +148,15 @@ void videoHandler::process_video(int MIDSTEP_flag){
             cv::destroyWindow("mask");
         }
 
-        balls_detector.detectBalls(frame_i, table.ROI, table.field_color);
+        balls_detector.detectBalls(frame_i, table.ROI, table.field_color, table.seg_mask);
         
         if(i==1){
-            //tracker.initializeTrackers(frame_i, balls_detector.centers);
+            //projecter.findLines(frame_i, table.ROI);
+            //projecter.projectBalls(frame_i, balls_detector.centers);
+            //tracker.initializeTrackers(frame_i, balls_detector.balls);
         }
         else{
-            //tracker.updateTrackers(frame_i, balls_detector.centers);
+            //tracker.updateTrackers(frame_i);
         }
 
         writer.write(drawed);

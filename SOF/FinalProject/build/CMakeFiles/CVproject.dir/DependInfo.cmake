@@ -12,6 +12,9 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/Users/sofiagirardello/Desktop/FinalProject/ALB/FinalProject/src/main.cpp" "CMakeFiles/CVproject.dir/src/main.cpp.o" "gcc" "CMakeFiles/CVproject.dir/src/main.cpp.o.d"
   "/Users/sofiagirardello/Desktop/FinalProject/ALB/FinalProject/src/metrics.cpp" "CMakeFiles/CVproject.dir/src/metrics.cpp.o" "gcc" "CMakeFiles/CVproject.dir/src/metrics.cpp.o.d"
   "/Users/sofiagirardello/Desktop/FinalProject/ALB/FinalProject/src/table.cpp" "CMakeFiles/CVproject.dir/src/table.cpp.o" "gcc" "CMakeFiles/CVproject.dir/src/table.cpp.o.d"
+  "/Users/sofiagirardello/Desktop/FinalProject/ALB/FinalProject/src/trajectoryProjection.cpp" "CMakeFiles/CVproject.dir/src/trajectoryProjection.cpp.o" "gcc" "CMakeFiles/CVproject.dir/src/trajectoryProjection.cpp.o.d"
+  "/Users/sofiagirardello/Desktop/FinalProject/ALB/FinalProject/src/trajectoryProjection copy.cpp" "CMakeFiles/CVproject.dir/src/trajectoryProjection_copy.cpp.o" "gcc" "CMakeFiles/CVproject.dir/src/trajectoryProjection_copy.cpp.o.d"
+  "/Users/sofiagirardello/Desktop/FinalProject/ALB/FinalProject/src/trajectoryProjection copy 2.cpp" "CMakeFiles/CVproject.dir/src/trajectoryProjection_copy_2.cpp.o" "gcc" "CMakeFiles/CVproject.dir/src/trajectoryProjection_copy_2.cpp.o.d"
   "/Users/sofiagirardello/Desktop/FinalProject/ALB/FinalProject/src/trajectoryTracking.cpp" "CMakeFiles/CVproject.dir/src/trajectoryTracking.cpp.o" "gcc" "CMakeFiles/CVproject.dir/src/trajectoryTracking.cpp.o.d"
   "/Users/sofiagirardello/Desktop/FinalProject/ALB/FinalProject/src/videoHandler.cpp" "CMakeFiles/CVproject.dir/src/videoHandler.cpp.o" "gcc" "CMakeFiles/CVproject.dir/src/videoHandler.cpp.o.d"
   )

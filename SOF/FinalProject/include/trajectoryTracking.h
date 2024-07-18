@@ -25,8 +25,8 @@
 
     explicit trajectoryTracker();
 
-    //void initializeTrackers(const cv::Mat& frame, const std::vector<cv::Point2f>& centers);
-    //void updateTrackers(const cv::Mat& frame, const std::vector<cv::Point2f>& centers);
+    void initializeTrackers(const cv::Mat& frame, const std::vector<cv::Rect>& centers);
+    void updateTrackers(const cv::Mat& frame);
     //void drawTrajectories(cv::Mat& frame);
 
   };

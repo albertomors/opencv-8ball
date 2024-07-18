@@ -225,6 +225,78 @@ src/table.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/CVproject.dir/build.make CMakeFiles/CVproject.dir/src/table.cpp.s
 .PHONY : src/table.cpp.s
 
+src/trajectoryProjection.o: src/trajectoryProjection.cpp.o
+.PHONY : src/trajectoryProjection.o
+
+# target to build an object file
+src/trajectoryProjection.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CVproject.dir/build.make CMakeFiles/CVproject.dir/src/trajectoryProjection.cpp.o
+.PHONY : src/trajectoryProjection.cpp.o
+
+src/trajectoryProjection.i: src/trajectoryProjection.cpp.i
+.PHONY : src/trajectoryProjection.i
+
+# target to preprocess a source file
+src/trajectoryProjection.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CVproject.dir/build.make CMakeFiles/CVproject.dir/src/trajectoryProjection.cpp.i
+.PHONY : src/trajectoryProjection.cpp.i
+
+src/trajectoryProjection.s: src/trajectoryProjection.cpp.s
+.PHONY : src/trajectoryProjection.s
+
+# target to generate assembly for a file
+src/trajectoryProjection.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CVproject.dir/build.make CMakeFiles/CVproject.dir/src/trajectoryProjection.cpp.s
+.PHONY : src/trajectoryProjection.cpp.s
+
+src/trajectoryProjection_copy.o: src/trajectoryProjection_copy.cpp.o
+.PHONY : src/trajectoryProjection_copy.o
+
+# target to build an object file
+src/trajectoryProjection_copy.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CVproject.dir/build.make CMakeFiles/CVproject.dir/src/trajectoryProjection_copy.cpp.o
+.PHONY : src/trajectoryProjection_copy.cpp.o
+
+src/trajectoryProjection_copy.i: src/trajectoryProjection_copy.cpp.i
+.PHONY : src/trajectoryProjection_copy.i
+
+# target to preprocess a source file
+src/trajectoryProjection_copy.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CVproject.dir/build.make CMakeFiles/CVproject.dir/src/trajectoryProjection_copy.cpp.i
+.PHONY : src/trajectoryProjection_copy.cpp.i
+
+src/trajectoryProjection_copy.s: src/trajectoryProjection_copy.cpp.s
+.PHONY : src/trajectoryProjection_copy.s
+
+# target to generate assembly for a file
+src/trajectoryProjection_copy.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CVproject.dir/build.make CMakeFiles/CVproject.dir/src/trajectoryProjection_copy.cpp.s
+.PHONY : src/trajectoryProjection_copy.cpp.s
+
+src/trajectoryProjection_copy_2.o: src/trajectoryProjection_copy_2.cpp.o
+.PHONY : src/trajectoryProjection_copy_2.o
+
+# target to build an object file
+src/trajectoryProjection_copy_2.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CVproject.dir/build.make CMakeFiles/CVproject.dir/src/trajectoryProjection_copy_2.cpp.o
+.PHONY : src/trajectoryProjection_copy_2.cpp.o
+
+src/trajectoryProjection_copy_2.i: src/trajectoryProjection_copy_2.cpp.i
+.PHONY : src/trajectoryProjection_copy_2.i
+
+# target to preprocess a source file
+src/trajectoryProjection_copy_2.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CVproject.dir/build.make CMakeFiles/CVproject.dir/src/trajectoryProjection_copy_2.cpp.i
+.PHONY : src/trajectoryProjection_copy_2.cpp.i
+
+src/trajectoryProjection_copy_2.s: src/trajectoryProjection_copy_2.cpp.s
+.PHONY : src/trajectoryProjection_copy_2.s
+
+# target to generate assembly for a file
+src/trajectoryProjection_copy_2.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CVproject.dir/build.make CMakeFiles/CVproject.dir/src/trajectoryProjection_copy_2.cpp.s
+.PHONY : src/trajectoryProjection_copy_2.cpp.s
+
 src/trajectoryTracking.o: src/trajectoryTracking.cpp.o
 .PHONY : src/trajectoryTracking.o
 
@@ -294,6 +366,15 @@ help:
 	@echo "... src/table.o"
 	@echo "... src/table.i"
 	@echo "... src/table.s"
+	@echo "... src/trajectoryProjection.o"
+	@echo "... src/trajectoryProjection.i"
+	@echo "... src/trajectoryProjection.s"
+	@echo "... src/trajectoryProjection_copy.o"
+	@echo "... src/trajectoryProjection_copy.i"
+	@echo "... src/trajectoryProjection_copy.s"
+	@echo "... src/trajectoryProjection_copy_2.o"
+	@echo "... src/trajectoryProjection_copy_2.i"
+	@echo "... src/trajectoryProjection_copy_2.s"
 	@echo "... src/trajectoryTracking.o"
 	@echo "... src/trajectoryTracking.i"
 	@echo "... src/trajectoryTracking.s"

@@ -50,14 +50,49 @@ cv::Mat tableDetector::threshold_mask(const cv::Scalar& color) {
     cv::cvtColor(this->origin_frame, hsv_img, cv::COLOR_BGR2HSV);
 
     //accepted ranges - HANDTUNED
-    cv::Scalar lower_bound(color[0] - 10, 100, 60);
-    cv::Scalar upper_bound(color[0] + 10, 250, 250);
+    cv::Scalar lower_bound(color[0] - 20, 100, 60);
+    cv::Scalar upper_bound(color[0] + 20, 250, 250);
 
     cv::inRange(hsv_img, lower_bound, upper_bound, mask); //apply treshold
     /* cv::imshow("mask", mask);
     cv::waitKey(0); */
 
     return mask;
+
+    /*
+    cv::imshow("roi", table_roi);
+
+    // Split HSV channels
+    std::vector<cv::Mat> channels;
+    cv::split(hsv_img, channels);
+
+    // Extract Hue (H), Saturation (S), and Value (V) channels
+    cv::Mat hueChannel = channels[0];    // Hue channel in HSV
+    cv::Mat satChannel = channels[1];    // Saturation channel in HSV
+    cv::Mat valueChannel = channels[2];  // Value channel in HSV
+
+    cv::Mat mask_thr, result, result2;
+
+    // Assuming field_color is the hue value passed in the color parameter
+    int field_color = static_cast<int>(color[0]);
+
+    // Apply threshold to the hue channel
+    cv::inRange(hueChannel, field_color - 10, field_color + 10, mask_thr);
+    cv::imshow("1", mask_thr);
+
+    cv::bitwise_and(this->origin_frame, this->origin_frame, result2, mask_thr);
+
+    // Invert the mask
+    //cv::bitwise_not(mask_thr, mask_thr);
+
+    // Apply the inverted mask to the original frame
+    //cv::bitwise_and(this->origin_frame, this->origin_frame, result, mask_thr);
+
+    // Apply the original table_roi mask to the result
+    //cv::bitwise_and(mask_thr, table_roi, result2);
+
+    cv::imshow("ROI Mask Applied table", result2);
+    */
 }
 
 cv::Mat tableDetector::find_largest_comp(const cv::Mat& mask) {
@@ -168,4 +203,3 @@ cv::Mat tableDetector::draw_borders(const cv::Mat& img){
     cv::polylines(edited, this->internal_borders, true, cv::Scalar(0, 0, 0), 2);
     return edited;
 }
-

@@ -18,20 +18,18 @@
     cv::Mat frame;
     cv::Mat table_roi;
     std::vector<cv::Point> field;
-    std::vector<cv::Rect> balls;
     bool draw;
     
     public:
 
     std::vector<cv::Point2f> centers;
+    std::vector<cv::Rect> balls;
 
 
     //explicit ballDetector(const cv::Mat currentFrame, std::vector<cv::Point> edgePoints);
     explicit ballDetector();
 
-    void detectBalls(const cv::Mat& currentFrame, const cv::Mat& ROI, const float field_color);
-
-    std::vector<std::tuple<cv::Point, int, cv::Mat>> FindTheBalls(cv::Mat img, std::vector<std::vector<cv::Point>>& contours, int similarity_threshold);
+    void detectBalls(const cv::Mat& currentFrame, const cv::Mat& ROI, const float field_color, const cv::Mat& seg_mask);
 
     void drawDetection();
 
