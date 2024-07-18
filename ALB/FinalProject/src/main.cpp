@@ -7,6 +7,8 @@ call videoHandler
 
 #include "videoHandler.h"
 
+cv::Mat plot_bb(const cv::Mat& src, const cv::Mat& bb);
+
 int main(int argc, char** argv) {
 
     if (argc<3) {
@@ -25,6 +27,7 @@ int main(int argc, char** argv) {
         std::cout << "Terminated without errors." << std::endl;
         return 0;
     }
+
     std::cerr << "Process terminated due errors." << std::endl;
     return -1;
 }

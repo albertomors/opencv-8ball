@@ -26,6 +26,8 @@ private:
 
     std::string folder_name;
 
+public:
+
     //seg-masks
     cv::Mat ffirst_mask;        //groundtruth
     cv::Mat ffirst_ret_mask;    //computed

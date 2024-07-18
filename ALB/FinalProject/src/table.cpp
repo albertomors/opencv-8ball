@@ -33,6 +33,7 @@ cv::Scalar tableDetector::get_dominant_color() {
 cv::Mat tableDetector::treshold_mask(const cv::Scalar& color) {
     cv::Mat hsv_img, mask;
     cv::cvtColor(this->origin_frame, hsv_img, cv::COLOR_BGR2HSV);
+    cv::GaussianBlur(hsv_img, hsv_img, cv::Size(5, 5), 0, 0);
 
     //accepted ranges - HANDTUNED
     cv::Scalar lower_bound(color[0] - 10, 100, 60);
@@ -52,7 +53,7 @@ cv::Mat tableDetector::find_largest_comp(const cv::Mat& mask) {
     cv::waitKey(0); */
 
     //closing pre-processing
-    cv::Mat element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
+    cv::Mat element = cv::getStructuringElement(cv::MORPH_CROSS, cv::Size(3, 3));
     cv::morphologyEx(mask, mask, cv::MORPH_CLOSE, element);
     
     /* cv::imshow("after morph", mask);
@@ -71,29 +72,26 @@ cv::Mat tableDetector::find_largest_comp(const cv::Mat& mask) {
     }}
 
     //create the mask
-    cv::Mat seg_mask = (labels == curr_largest);
-    /* cv::imshow("largest component", largest_mask);
+    cv::Mat biggest = (labels == curr_largest);
+    /* cv::imshow("largest component", biggest);
     cv::waitKey(0); */
     
-    return seg_mask;
+    return biggest;
 }
 
-std::vector<cv::Point> tableDetector::find_borders(const cv::Mat& mask) {
+std::vector<cv::Point> tableDetector::find_contour(const cv::Mat& mask) {
     //find contour of closed area
     std::vector<std::vector<cv::Point>> contours;
     cv::findContours(mask, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
     std::vector<cv::Point> contour = contours[0];
+    
+    return contour;
+}
 
-    //convex hull to handle occlusions
+std::vector<cv::Point> tableDetector::get_hull(const std::vector<cv::Point>& contour){
+    //convex hull to remove occlusions
     std::vector<cv::Point> hull;
     cv::convexHull(contour, hull);
-
-    /* cv::Mat contour_img = mask.clone();
-    cv::cvtColor(contour_img, contour_img, cv::COLOR_GRAY2BGR);
-    cv::drawContours(contour_img, contours, 0, cv::Scalar(0, 255, 0), 2);
-    cv::polylines(contour_img, hull, true, cv::Scalar(0, 0, 255), 2);
-    cv::imshow("contours", contour_img);
-    cv::waitKey(0); */
 
     return hull;
 }
@@ -101,17 +99,19 @@ std::vector<cv::Point> tableDetector::find_borders(const cv::Mat& mask) {
 void tableDetector::find_table(const cv::Mat& img){
     this->origin_frame = img.clone();
     cv::Scalar table_color = this->get_dominant_color();
-    cv::Mat tresholded = this->treshold_mask(table_color);
-    this->seg_mask = this->find_largest_comp(tresholded);
-    this->borders = this->find_borders(seg_mask);
+    cv::Mat tresholded_img = this->treshold_mask(table_color);
+    cv::Mat mask = this->find_largest_comp(tresholded_img);
+    this->contour = this->find_contour(mask);
 
-    this->ROI = cv::Mat::zeros(this->origin_frame.size(), CV_8UC1);
-    cv::Mat hull_mat(this->borders);
-    cv::fillConvexPoly(this->ROI, hull_mat, cv::Scalar(255));
+    this->seg_mask = cv::Mat::zeros(this->origin_frame.size(), CV_8UC1);
+    cv::fillPoly(this->seg_mask, this->contour, cv::Scalar(255));
+
+    this->hull = get_hull(this->contour);
 }
 
 cv::Mat tableDetector::draw_borders(const cv::Mat& img){
     cv::Mat edited = img.clone();
-    cv::polylines(edited, this->borders, true, cv::Scalar(0, 255, 255), 2);
+    cv::polylines(edited, this->contour, true, cv::Scalar(255, 0, 255), 1);
+    cv::polylines(edited, this->hull, true, cv::Scalar(0, 255, 255), 2);
     return edited;
 }

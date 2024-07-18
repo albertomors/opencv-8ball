@@ -14,7 +14,11 @@ FILE: metrics.h
   #include <opencv2/opencv.hpp>
   #include <iostream>
 
-  void compute_mAP(std::vector<cv::Rect>& balls);
+  double compute_mAP(const cv::Mat& pred_bb, const cv::Mat& true_bb);
+  double compute_IoU(const cv::Rect& r1, const cv::Rect& r2);
+  std::vector<cv::Point2f> get_PR_table(const cv::Mat& pred_bb, const cv::Mat& true_bb, int pred_class);
+  std::vector<cv::Point2f> refine_PR_table(std::vector<cv::Point2f>& points);
+  
   void compute_mIoU(cv::Mat& seg_mask);
 
 #endif

@@ -43,8 +43,8 @@ cv::Mat videoHandler::load_txt_data(const std::string& path){
     }
 
     //process file and store data in a vector
-    std::vector<uint16_t> data;
-    uint16_t value;
+    std::vector<int> data;
+    int value;
     while (file >> value)
         data.push_back(value);
     file.close();
@@ -90,13 +90,8 @@ void videoHandler::process_video(int MIDSTEP_flag){
     //create results folder in the root project path
     std::string out_folder = "../results";
     if (!cv::utils::fs::exists(out_folder)) {
-        if (!cv::utils::fs::createDirectories(out_folder))
-            std::cout << "Succesfully created folder: " << out_folder << std::endl;
-        else{
-            std::cerr << "Error: Impossible to create folder: " << out_folder << std::endl;
-            this->errors = true;
-            return;
-        }
+        cv::utils::fs::createDirectories(out_folder);
+        std::cout << "Succesfully created folder: " << out_folder << std::endl;
     }
 
     // Define the output video path
@@ -124,7 +119,6 @@ void videoHandler::process_video(int MIDSTEP_flag){
             std::cout << "frame " << i << "/" << tot_frames << std::endl;
             cv::namedWindow("frame_i"); cv::imshow("frame_i", drawed);
             cv::namedWindow("seg_mask"); cv::imshow("seg_mask", table.seg_mask);
-            cv::namedWindow("ROI"); cv::imshow("ROI", table.ROI);
             cv::waitKey(1);
         }
 
@@ -159,6 +153,10 @@ void videoHandler::process_video(int MIDSTEP_flag){
     compute metrics
     ...
     */
+
+    std::cout << "METRICS:" << std::endl;
+    double mAP = compute_mAP(this->ffirst_bb,this->flast_bb);
+    std::cout << "mAP = " << mAP << std::endl;
 }
 
 
@@ -200,4 +198,46 @@ cv::Mat displayMask(const cv::Mat& mask){
     cv::LUT(mask, lookUpTable, colored);
     
     return colored;
+}
+
+cv::Mat plot_bb(const cv::Mat& src, const cv::Mat& bb){
+    cv::Mat edit = src.clone();
+
+    //build LUT to convert class values [0..5] to BGR colors
+    cv::Mat lookUpTable = cv::Mat::zeros(1, 256, CV_8UC3);
+    //lookUpTable.at<cv::Vec3b>(0) = cv::Vec3b(128,128,128);
+    lookUpTable.at<cv::Vec3b>(1) = cv::Vec3b(255,255,255);
+    lookUpTable.at<cv::Vec3b>(2) = cv::Vec3b(0,0,0);
+    lookUpTable.at<cv::Vec3b>(3) = cv::Vec3b(0,0,255);
+    lookUpTable.at<cv::Vec3b>(4) = cv::Vec3b(255,0,0);
+    //lookUpTable.at<cv::Vec3b>(5) = cv::Vec3b(0,255,0);
+
+    /* 
+    0. Background
+    1. white "cue ball"
+    2. black "8-ball"
+    3. ball with solid color
+    4. ball with stripes
+    5. playing field (table)
+
+    0: (128,128,128)
+    1: (255, 255, 255)
+    2: (0,0,0)
+    3: (0,0,255)
+    4: (255,0,0,)
+    5: (0,255,0)
+    */
+    uint16_t x,y,w,h,c;
+    for(int i=0; i<bb.rows; ++i){
+        x = bb.at<uint16_t>(i,0);
+        y = bb.at<uint16_t>(i,1);
+        w = bb.at<uint16_t>(i,2);
+        h = bb.at<uint16_t>(i,3);
+        c = bb.at<uint16_t>(i,4);
+        cv::Rect rect(x,y,w,h);
+
+        cv::rectangle(edit, rect, lookUpTable.at<cv::Vec3b>(c), 1);
+    }
+    
+    return edit;
 }
