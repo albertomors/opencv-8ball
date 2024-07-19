@@ -10,7 +10,6 @@ FILE: table.cpp
 tableDetector::tableDetector(){}
 
 cv::Scalar tableDetector::get_dominant_color() {
-    
     cv::Mat hsv_img;
     cv::cvtColor(this->origin_frame, hsv_img, cv::COLOR_BGR2HSV);
 
@@ -28,71 +27,25 @@ cv::Scalar tableDetector::get_dominant_color() {
     cv::minMaxIdx(hist, 0, &max_val, 0, &max_val_idx);
     float hue_dominant = (max_val_idx * 180.0) / h_bins; //convert back to hue-value
 
-    cv::Scalar avgBrightness = cv::mean(hsv_img);
-    // Extract the V channel and compute the median brightness
-    std::vector<uchar> vValues;
-    for (int i = 0; i < hsv_img.rows; i++) {
-        for (int j = 0; j < hsv_img.cols; j++) {
-            vValues.push_back(hsv_img.at<cv::Vec3b>(i, j)[2]);
-        }
-    }
-    std::nth_element(vValues.begin(), vValues.begin() + vValues.size() / 2, vValues.end());
-    float medianV = vValues[vValues.size() / 2];
+    this->color = hue_dominant;
 
-    this->field_color = hue_dominant;
-
-    return cv::Scalar(hue_dominant, 127, medianV); //mid-value for sat and brightness
+    return cv::Scalar(hue_dominant, 127, 127); //mid-value for sat and brightness
 }
 
-cv::Mat tableDetector::threshold_mask(const cv::Scalar& color) {
-    
+cv::Mat tableDetector::treshold_mask(const cv::Scalar& color) {
     cv::Mat hsv_img, mask;
     cv::cvtColor(this->origin_frame, hsv_img, cv::COLOR_BGR2HSV);
+    cv::GaussianBlur(hsv_img, hsv_img, cv::Size(5, 5), 0, 0);
 
     //accepted ranges - HANDTUNED
-    cv::Scalar lower_bound(color[0] - 20, 100, 60);
-    cv::Scalar upper_bound(color[0] + 20, 250, 250);
+    cv::Scalar lower_bound(color[0] - 10, 100, 60);
+    cv::Scalar upper_bound(color[0] + 10, 250, 250);
 
     cv::inRange(hsv_img, lower_bound, upper_bound, mask); //apply treshold
     /* cv::imshow("mask", mask);
     cv::waitKey(0); */
 
     return mask;
-
-    /*
-    cv::imshow("roi", table_roi);
-
-    // Split HSV channels
-    std::vector<cv::Mat> channels;
-    cv::split(hsv_img, channels);
-
-    // Extract Hue (H), Saturation (S), and Value (V) channels
-    cv::Mat hueChannel = channels[0];    // Hue channel in HSV
-    cv::Mat satChannel = channels[1];    // Saturation channel in HSV
-    cv::Mat valueChannel = channels[2];  // Value channel in HSV
-
-    cv::Mat mask_thr, result, result2;
-
-    // Assuming field_color is the hue value passed in the color parameter
-    int field_color = static_cast<int>(color[0]);
-
-    // Apply threshold to the hue channel
-    cv::inRange(hueChannel, field_color - 10, field_color + 10, mask_thr);
-    cv::imshow("1", mask_thr);
-
-    cv::bitwise_and(this->origin_frame, this->origin_frame, result2, mask_thr);
-
-    // Invert the mask
-    //cv::bitwise_not(mask_thr, mask_thr);
-
-    // Apply the inverted mask to the original frame
-    //cv::bitwise_and(this->origin_frame, this->origin_frame, result, mask_thr);
-
-    // Apply the original table_roi mask to the result
-    //cv::bitwise_and(mask_thr, table_roi, result2);
-
-    cv::imshow("ROI Mask Applied table", result2);
-    */
 }
 
 cv::Mat tableDetector::find_largest_comp(const cv::Mat& mask) {
@@ -102,7 +55,7 @@ cv::Mat tableDetector::find_largest_comp(const cv::Mat& mask) {
     cv::waitKey(0); */
 
     //closing pre-processing
-    cv::Mat element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(5, 5));
+    cv::Mat element = cv::getStructuringElement(cv::MORPH_CROSS, cv::Size(3, 3));
     cv::morphologyEx(mask, mask, cv::MORPH_CLOSE, element);
     
     /* cv::imshow("after morph", mask);
@@ -121,85 +74,46 @@ cv::Mat tableDetector::find_largest_comp(const cv::Mat& mask) {
     }}
 
     //create the mask
-    cv::Mat seg_mask = (labels == curr_largest);
-    /* cv::imshow("largest component", largest_mask);
+    cv::Mat biggest = (labels == curr_largest);
+    /* cv::imshow("largest component", biggest);
     cv::waitKey(0); */
     
-    return seg_mask;
+    return biggest;
 }
 
-std::vector<cv::Point> tableDetector::find_borders(const cv::Mat& mask) {
+std::vector<cv::Point> tableDetector::find_contour(const cv::Mat& mask) {
     //find contour of closed area
     std::vector<std::vector<cv::Point>> contours;
     cv::findContours(mask, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
     std::vector<cv::Point> contour = contours[0];
+    
+    return contour;
+}
 
-    //convex hull to handle occlusions
+std::vector<cv::Point> tableDetector::get_hull(const std::vector<cv::Point>& contour){
+    //convex hull to remove occlusions
     std::vector<cv::Point> hull;
     cv::convexHull(contour, hull);
 
-    /* cv::Mat contour_img = mask.clone();
-    cv::cvtColor(contour_img, contour_img, cv::COLOR_GRAY2BGR);
-    cv::drawContours(contour_img, contours, 0, cv::Scalar(0, 255, 0), 2);
-    cv::polylines(contour_img, hull, true, cv::Scalar(0, 0, 255), 2);
-    cv::imshow("contours", contour_img);
-    cv::waitKey(0); */
-
     return hull;
-}
-
-std::vector<cv::Point> tableDetector::find_internal_borders(const cv::Mat& mask) {
-    cv::Mat labels, stats, centroids;
-
-    //closing pre-processing
-    cv::Mat element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
-    cv::morphologyEx(mask, mask, cv::MORPH_CLOSE, element);
-    
-    int num = connectedComponentsWithStats(mask, labels, stats, centroids);
-
-    //find the second largest component excluding background and largest
-    int largest_area = -1;
-    int largest_idx = -1;
-    int second_largest_area = -1;
-    int second_largest_idx = -1;
-
-    for (int i = 1; i < num; i++) {
-        int area = stats.at<int>(i, cv::CC_STAT_AREA);
-        if (area > largest_area) {
-            second_largest_area = largest_area;
-            second_largest_idx = largest_idx;
-            largest_area = area;
-            largest_idx = i;
-        } else if (area > second_largest_area) {
-            second_largest_area = area;
-            second_largest_idx = i;
-        }
-    }
-
-    if (second_largest_idx == -1) {
-        return std::vector<cv::Point>();
-    }
-
-    cv::Mat seg_mask = (labels == second_largest_idx);
-    return find_borders(seg_mask); // Return borders of the second largest component
 }
 
 void tableDetector::find_table(const cv::Mat& img){
     this->origin_frame = img.clone();
     cv::Scalar table_color = this->get_dominant_color();
-    cv::Mat tresholded = this->threshold_mask(table_color);
-    this->seg_mask = this->find_largest_comp(tresholded);
-    this->borders = this->find_borders(seg_mask);
-    this->internal_borders = this->find_internal_borders(seg_mask);
+    cv::Mat tresholded_img = this->treshold_mask(table_color);
+    cv::Mat mask = this->find_largest_comp(tresholded_img);
+    this->contour = this->find_contour(mask);
 
-    this->ROI = cv::Mat::zeros(this->origin_frame.size(), CV_8UC1);
-    cv::Mat hull_mat(this->borders);
-    cv::fillConvexPoly(this->ROI, hull_mat, cv::Scalar(255));
+    this->seg_mask = cv::Mat::zeros(this->origin_frame.size(), CV_8UC1);
+    cv::fillPoly(this->seg_mask, this->contour, cv::Scalar(255));
+
+    this->hull = get_hull(this->contour);
 }
 
 cv::Mat tableDetector::draw_borders(const cv::Mat& img){
     cv::Mat edited = img.clone();
-    cv::polylines(edited, this->borders, true, cv::Scalar(0, 255, 255), 2);
-    cv::polylines(edited, this->internal_borders, true, cv::Scalar(0, 0, 0), 2);
+    cv::polylines(edited, this->contour, true, cv::Scalar(255, 0, 255), 1);
+    cv::polylines(edited, this->hull, true, cv::Scalar(0, 255, 255), 2);
     return edited;
 }

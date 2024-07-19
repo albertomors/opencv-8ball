@@ -130,7 +130,7 @@ void videoHandler::process_video(int MIDSTEP_flag){
             std::cout << "frame " << i << "/" << tot_frames << std::endl;
             cv::namedWindow("frame_i"); cv::imshow("frame_i", drawed);
             cv::namedWindow("seg_mask"); cv::imshow("seg_mask", table.seg_mask);
-            cv::namedWindow("ROI"); cv::imshow("ROI", table.ROI);
+            cv::namedWindow("ROI"); cv::imshow("ROI", table.seg_mask);
             cv::waitKey(1);
         }
 
@@ -148,7 +148,7 @@ void videoHandler::process_video(int MIDSTEP_flag){
             cv::destroyWindow("mask");
         }
 
-        balls_detector.detectBalls(frame_i, table.ROI, table.field_color, table.seg_mask);
+        balls_detector.detectBalls(frame_i, table.seg_mask, table.color);
         
         if(i==1){
             //projecter.findLines(frame_i, table.ROI);
@@ -164,10 +164,10 @@ void videoHandler::process_video(int MIDSTEP_flag){
     }
 
     cv::imshow("before", frame_i);
-    cv::waitKey(0);
+    cv::waitKey(1);
 
     //tracker.drawTrajectories(frame_i);
-    cv::waitKey(0);
+    cv::waitKey(1);
 
     std::cout << "Process exited from loop after " << i-1 << " frames elaborated." << std::endl;
     capture >> frame_i;

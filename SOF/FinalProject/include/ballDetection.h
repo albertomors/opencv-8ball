@@ -29,7 +29,7 @@
     //explicit ballDetector(const cv::Mat currentFrame, std::vector<cv::Point> edgePoints);
     explicit ballDetector();
 
-    void detectBalls(const cv::Mat& currentFrame, const cv::Mat& ROI, const float field_color, const cv::Mat& seg_mask);
+    void detectBalls(const cv::Mat& currentFrame, const cv::Mat& ROI, const float color);
 
     void drawDetection();
 

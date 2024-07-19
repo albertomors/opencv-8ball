@@ -18,19 +18,21 @@ class tableDetector{
   private:
 
       cv::Mat origin_frame;
-      std::vector<cv::Point> contour; //internal excluding occlusion
-      std::vector<cv::Point> hull;    //external including them
+      std::vector<cv::Point> borders;
+      std::vector<cv::Point> internal_borders;
 
       cv::Scalar get_dominant_color();
-      cv::Mat treshold_mask(const cv::Scalar& color);
+      cv::Mat threshold_mask(const cv::Scalar& color);
       cv::Mat find_largest_comp(const cv::Mat& mask);
-      std::vector<cv::Point> find_contour(const cv::Mat& mask);
-      std::vector<cv::Point> get_hull(const std::vector<cv::Point>&);
+      std::vector<cv::Point> find_borders(const cv::Mat& mask);
+      std::vector<cv::Point> find_internal_borders(const cv::Mat& mask);
+      
 
   public:
 
       cv::Mat seg_mask;
-      float color;
+      cv::Mat ROI;
+      float field_color;
 
       explicit tableDetector();
       void find_table(const cv::Mat& img);
