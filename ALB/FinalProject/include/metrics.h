@@ -19,6 +19,7 @@ FILE: metrics.h
   std::vector<cv::Point2f> get_PR_table(const cv::Mat& pred_bb, const cv::Mat& true_bb, int pred_class);
   std::vector<cv::Point2f> refine_PR_table(std::vector<cv::Point2f>& points);
   
-  void compute_mIoU(cv::Mat& seg_mask);
+  double compute_mIoU(const std::vector<std::pair<cv::Mat, cv::Mat>>& videoSegMasks, int numClasses);
+  double calculateIoU(const cv::Mat& groundTruth, const cv::Mat& prediction, int classId);
 
 #endif

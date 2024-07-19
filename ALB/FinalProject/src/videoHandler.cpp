@@ -20,8 +20,8 @@ videoHandler::videoHandler(const std::string& folder_name) {
 
 void videoHandler::load_files() {
     std::string mask_path = "../Dataset/" + folder_name + "/masks/";
-    this->ffirst_mask = cv::imread(mask_path + "frame_first.png");
-    this->flast_mask = cv::imread(mask_path + "frame_last.png");
+    this->ffirst_mask = cv::imread(mask_path + "frame_first.png", cv::IMREAD_GRAYSCALE);
+    this->flast_mask = cv::imread(mask_path + "frame_last.png", cv::IMREAD_GRAYSCALE);
     if (ffirst_mask.empty() || flast_mask.empty()){
         std::cerr << "Error: Could not load the seg-mask groundtruth files!" << std::endl;
         std::cout << "Ensure to be inside the build folder with the shell and pass a valid name for the folder." << std::endl;
@@ -154,9 +154,25 @@ void videoHandler::process_video(int MIDSTEP_flag){
     ...
     */
 
-    std::cout << "METRICS:" << std::endl;
+    std::cout << "---METRICS-------------" << std::endl;
     double mAP = compute_mAP(this->ffirst_bb,this->flast_bb);
     std::cout << "mAP = " << mAP << std::endl;
+    
+    //qua provo solo a sporcare un po' la maschera di seg con due rettangoli
+    std::vector<std::pair<cv::Mat, cv::Mat>> videoSegMasks;
+    cv::Mat corrupted = this->ffirst_mask.clone();
+    cv::rectangle(corrupted,cv::Rect(300,300,50,50),cv::Scalar(3),cv::FILLED);
+    cv::rectangle(corrupted,cv::Rect(657,342,23,102),cv::Scalar(1),cv::FILLED);
+    cv::imshow("corrupted",displayMask(corrupted));
+    cv::waitKey(0);
+
+    std::pair<cv::Mat,cv::Mat> pairfirst = std::make_pair(corrupted,this->ffirst_mask);
+    std::pair<cv::Mat,cv::Mat> pairlast = std::make_pair(this->flast_mask,this->flast_mask);
+    videoSegMasks.push_back(pairfirst);
+    videoSegMasks.push_back(pairlast);
+    
+    double mIoU = compute_mIoU(videoSegMasks,6);
+    std::cout << "mIoU = " << mIoU << std::endl;
 }
 
 
@@ -167,6 +183,8 @@ void videoHandler::process_video(int MIDSTEP_flag){
 //-----------------------------------------------------------
 
 cv::Mat displayMask(const cv::Mat& mask){
+    cv::Mat bgr;
+    cv::cvtColor(mask, bgr, cv::COLOR_GRAY2BGR);
 
     //build LUT to convert mask values [0..5] to BGR colors
     cv::Mat lookUpTable = cv::Mat::zeros(1, 256, CV_8UC3);
@@ -195,7 +213,7 @@ cv::Mat displayMask(const cv::Mat& mask){
 
     //actually converts and display it
     cv::Mat colored;
-    cv::LUT(mask, lookUpTable, colored);
+    cv::LUT(bgr, lookUpTable, colored);
     
     return colored;
 }

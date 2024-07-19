@@ -30,14 +30,15 @@ std::vector<cv::Point2f> get_PR_table(const cv::Mat& pred_bb, const cv::Mat& tru
 
     //pre-iteration over groundtruth to get total GT
     int totalGT = 0;
-    for(int i=0; i<pred_bb.rows; ++i)
+    for(int i=0; i<true_bb.rows; ++i)
         totalGT += (true_bb.at<uint16_t>(i,4) == pred_class);
 
-    //handle the scenario where no true_bb is present for the class = all pred are FP
-    //there's no possibility you can find it - avoid all checks
+    //handle the scenario where no matching GT (true_bb) is present for the class
+    //all preds will be FP => TP=0 - avoid all checks
     if(totalGT == 0){
-        cv::Point2f point(0.0,0.0);
+        cv::Point2f point(1.0,0.0);
         PR_points.push_back(point); //append point to array
+        std::cout << "No GT are present for class " << pred_class << std::endl;
         return PR_points;
     }
 
@@ -91,10 +92,13 @@ std::vector<cv::Point2f> get_PR_table(const cv::Mat& pred_bb, const cv::Mat& tru
         }
     }
 
-    //handle the scenario where no prediction bb was present => all pred are FN
+    //handle the scenario where no prediction bb is present => all pred are FN or TN
     if(PR_points.size() == 0){
-        cv::Point2f point(0.0,0.0);
+        //at this point if we have GTs but no pred = FN (bad)
+        //otherwise if no pred but also no GT => TN (good)
+        cv::Point2f point = cv::Point2f(1.0,0.0);
         PR_points.push_back(point); //append point to array
+        std::cout << "No predictions are present for class " << pred_class << std::endl;
         return PR_points;
     }
 
@@ -156,7 +160,80 @@ double compute_mAP(const cv::Mat& pred_bb, const cv::Mat& true_bb){
     return mAP;
 }
 
-void compute_mIoU(cv::Mat& seg_mask){
-    //TODO
-    return;
+// ------------------------------------------------------------------------------------------------------------
+// Author: ELE
+
+// Function to calculate IoU for a single class (from 0 to 5)
+double compute_IoU_px(const cv::Mat& groundTruth, const cv::Mat& prediction, int classId) {
+    cv::Mat intersection, union_;
+    CV_Assert(groundTruth.channels() == 1 && prediction.channels() == 1);
+
+    // Create binary masks for the class
+    cv::Mat gtBinary = (groundTruth == classId);
+    cv::Mat predBinary = (prediction == classId);
+
+    // Calculate intersection and union
+    cv::bitwise_and(gtBinary, predBinary, intersection);
+    cv::bitwise_or(gtBinary, predBinary, union_);
+
+    int intersectionArea = cv::countNonZero(intersection);
+    int unionArea = cv::countNonZero(union_);
+
+    //to avoid division by 0
+    if (unionArea == 0) {
+        return 0.0;
+    }
+    // else return IoU
+    double IoU = static_cast<double>(intersectionArea) / unionArea;
+    return IoU;
+}
+
+// Function to compute the average mIoU for the considered video
+double compute_mIoU(const std::vector<std::pair<cv::Mat, cv::Mat>>& videoSegMasks, int numClasses) {
+    // Ensure we have exactly two pairs of masks (first and last?)
+    if (videoSegMasks.size() != 2) {
+        std::cerr << "Exactly two mask pairs are required for mIoU computation." << std::endl;
+        return 0.0;
+    }
+    if (numClasses == 0){
+        return 0.0;
+    }
+
+    const auto& firstFramePair = videoSegMasks[0];
+    const auto& lastFramePair = videoSegMasks[1];
+
+    const cv::Mat& groundTruthFirstFrame = firstFramePair.first;
+    const cv::Mat& predictionFirstFrame = firstFramePair.second;
+    const cv::Mat& groundTruthLastFrame = lastFramePair.first;
+    const cv::Mat& predictionLastFrame = lastFramePair.second;
+
+    // Check that all masks are of the same size
+    if (groundTruthFirstFrame.size() != predictionFirstFrame.size() ||
+        groundTruthFirstFrame.size() != groundTruthLastFrame.size() ||
+        groundTruthFirstFrame.size() != predictionLastFrame.size()) {
+        std::cerr << "All masks must be of the same size." << std::endl;
+        return 0.0;
+    }
+
+    // Check that mask's types match
+    if (groundTruthFirstFrame.type() != predictionFirstFrame.type() ||
+        groundTruthLastFrame.type() != predictionLastFrame.type()) {
+        std::cerr << "Prediction masks types don't match ground truth masks types." << std::endl;
+        return 0.0;
+    }
+    
+    double totalMeanIoU = 0.0;
+
+    // Calculate IoU for all classes
+    for (int classId = 0; classId < numClasses; ++classId) {
+        double iouFirstFrame = compute_IoU_px(groundTruthFirstFrame, predictionFirstFrame, classId);
+        double iouLastFrame = compute_IoU_px(groundTruthLastFrame, predictionLastFrame, classId);
+        double meanIoU = (iouFirstFrame + iouLastFrame) / 2.0;
+        totalMeanIoU += meanIoU;
+
+        std::cout << "IoU for class " << classId << " = " << meanIoU << std::endl; //TODO remove after debug
+    }
+
+    // Return mIoU
+    return totalMeanIoU / numClasses;
 }
