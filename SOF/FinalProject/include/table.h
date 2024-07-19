@@ -18,8 +18,8 @@ class tableDetector{
   private:
 
       cv::Mat origin_frame;
-      std::vector<cv::Point> contour; //internal excluding occlusion
       std::vector<cv::Point> hull;    //external including them
+      std::vector<cv::Point> contour; //internal excluding occlusion
 
       cv::Scalar get_dominant_color();
       cv::Mat treshold_mask(const cv::Scalar& color);

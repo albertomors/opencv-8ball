@@ -16,7 +16,6 @@
     private: 
 
     cv::Mat frame;
-    cv::Mat table_roi;
     std::vector<cv::Point> field;
     bool draw;
     
@@ -24,6 +23,8 @@
 
     std::vector<cv::Point2f> centers;
     std::vector<cv::Rect> balls;
+    std::vector<int> id_balls;
+    cv::Mat table_roi;
 
 
     //explicit ballDetector(const cv::Mat currentFrame, std::vector<cv::Point> edgePoints);

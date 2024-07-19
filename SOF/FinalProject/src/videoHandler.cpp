@@ -149,14 +149,14 @@ void videoHandler::process_video(int MIDSTEP_flag){
         }
 
         balls_detector.detectBalls(frame_i, table.seg_mask, table.color);
-        
+
         if(i==1){
-            //projecter.findLines(frame_i, table.ROI);
-            //projecter.projectBalls(frame_i, balls_detector.centers);
-            //tracker.initializeTrackers(frame_i, balls_detector.balls);
+            //projecter.findLines(frame_i, table.seg_mask);
+            //projecter.projectBalls(frame_i, balls_detector.centers, balls_detector.id_balls);
+            tracker.initializeTrackers(frame_i, balls_detector.balls);
         }
         else{
-            //tracker.updateTrackers(frame_i);
+            tracker.updateTrackers(frame_i);
         }
 
         writer.write(drawed);
