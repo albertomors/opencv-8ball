@@ -26,8 +26,6 @@ private:
 
     std::string folder_name;
 
-public:
-
     //seg-masks
     cv::Mat ffirst_mask;        //groundtruth
     cv::Mat ffirst_ret_mask;    //computed
@@ -50,10 +48,11 @@ public:
     bool errors;
 
     explicit videoHandler(const std::string& folder_name);
-    void process_video(int MIDSTEP_flag);                         //process video and call frameHandler iter by iter
+    
+    void process_video(int MIDSTEP_flag);
+    cv::Mat plot_bb(const cv::Mat& src, const cv::Mat& bb);
+    cv::Mat displayMask(const cv::Mat& mask);
 
 };
-
-cv::Mat displayMask(const cv::Mat& mask);
 
 #endif
