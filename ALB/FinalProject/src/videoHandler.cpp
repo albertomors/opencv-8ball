@@ -9,8 +9,8 @@ FILE: videoHandler.cpp
 */
 
 #include "videoHandler.h"
+#include "frameHandler.h"
 #include "metrics.h"
-#include "table.h"
 
 videoHandler::videoHandler(const std::string& folder_name) {
     this->errors = false;
@@ -105,38 +105,57 @@ void videoHandler::process_video(int MIDSTEP_flag){
     }
 
     int i = 1;
-    cv::Mat frame_i;
-    tableDetector table = tableDetector();
+    cv::Mat frame_i, ret_frame;
+    frameHandler frame_handler = frameHandler();
 
     while (i <= tot_frames) {
         capture >> frame_i;
-        
+        std::cout << "frame " << i << "/" << tot_frames << std::endl;
+
         //elaborate video - call frameHandler --------------------
+
+        //runs only for first frame or every if MIDSTEP_flag==true
+        if (i==1 || MIDSTEP_flag){
+            frame_handler.detect_table(frame_i);
+            //detect balls TODO
+            //classify balls TODO
+            //get_seg_masks and bb TODO
+            cv::Mat frame_i_ret_bb = this->ffirst_bb.clone(); //fantoccio per returned
+            cv::Mat frame_i_ret_mask = this->ffirst_mask.clone();
+
+            //instead this runs at every frame if MIDSTEP_flag==true
+            cv::namedWindow("bb"); cv::imshow("bb", this->plot_bb(frame_i, frame_i_ret_bb));
+            cv::namedWindow("mask"); cv::imshow("mask", this->displayMask(frame_i_ret_mask));
+            ret_frame = frame_handler.draw_frame(frame_i);
+            cv::namedWindow("frame_i"); cv::imshow("frame_i", ret_frame);   
+
+            //in case you want to visualize all steps this saves the masks ONLY for first frame
+            if (i==1){
+                this->ffirst_ret_bb = this->ffirst_bb.clone();
+                this->ffirst_ret_mask = this->ffirst_mask.clone();
+                cv::waitKey(0);
+            }
+        }
+
+        //runs for every frame
+        ret_frame = frame_handler.draw_frame(frame_i);
+        cv::namedWindow("frame_i"); cv::imshow("frame_i", ret_frame);   
+        cv::waitKey(1);
+
+        //runs only for last frame
+        if(i==tot_frames-1){
+            //get_seg_masks and bb
+            this->flast_ret_bb = this->flast_bb.clone();
+            this->flast_ret_mask = this->flast_mask.clone();
+
+            cv::namedWindow("mask"); cv::imshow("mask", this->displayMask(this->flast_ret_mask));
+            cv::namedWindow("bb"); cv::imshow("bb", this->plot_bb(frame_i, this->flast_ret_bb));
+            cv::waitKey(0);
+        }
+
+        //-------------------------------------------------------
         
-        table.find_table(frame_i);
-        cv::Mat drawed = table.draw_borders(frame_i);
-        if (MIDSTEP_flag){
-            std::cout << "frame " << i << "/" << tot_frames << std::endl;
-            cv::namedWindow("frame_i"); cv::imshow("frame_i", drawed);
-            cv::namedWindow("seg_mask"); cv::imshow("seg_mask", table.seg_mask);
-            cv::waitKey(1);
-        }
-
-        bool RET_flag = (i == 1 || i == tot_frames) ? true : false;
-        cv::Mat mask;
-        if(RET_flag)
-            mask = (i == 1) ? ffirst_mask : flast_mask;
-
-        // -------------------------------------------------------
-
-        if(RET_flag){ //returned masks and midsteps
-            cv::Mat ret_mask = mask;
-            cv::namedWindow("mask"); cv::imshow("mask", displayMask(ret_mask));
-            cv::waitKey();
-            cv::destroyWindow("mask");
-        }
-
-        writer.write(drawed);
+        writer.write(ret_frame);
         i++;
     }
 
@@ -155,34 +174,26 @@ void videoHandler::process_video(int MIDSTEP_flag){
     */
 
     std::cout << "---METRICS-------------" << std::endl;
-    double mAP = compute_mAP(this->ffirst_bb,this->flast_bb);
-    std::cout << "mAP = " << mAP << std::endl;
+    double mAP = compute_mAP(this->ffirst_bb,this->ffirst_ret_bb) + compute_mAP(this->flast_bb,this->flast_ret_bb);
+    std::cout << "mAP = " << mAP/2.0 << std::endl;
     
     //qua provo solo a sporcare un po' la maschera di seg con due rettangoli
-    std::vector<std::pair<cv::Mat, cv::Mat>> videoSegMasks;
-    cv::Mat corrupted = this->ffirst_mask.clone();
-    cv::rectangle(corrupted,cv::Rect(300,300,50,50),cv::Scalar(3),cv::FILLED);
-    cv::rectangle(corrupted,cv::Rect(657,342,23,102),cv::Scalar(1),cv::FILLED);
-    cv::imshow("corrupted",displayMask(corrupted));
-    cv::waitKey(0);
+    std::vector<std::pair<cv::Mat, cv::Mat>> segmasks;
+    cv::rectangle(this->ffirst_ret_mask,cv::Rect(300,300,50,50),cv::Scalar(3),cv::FILLED);
+    cv::rectangle(this->ffirst_ret_mask,cv::Rect(657,342,23,102),cv::Scalar(1),cv::FILLED);
 
-    std::pair<cv::Mat,cv::Mat> pairfirst = std::make_pair(corrupted,this->ffirst_mask);
-    std::pair<cv::Mat,cv::Mat> pairlast = std::make_pair(this->flast_mask,this->flast_mask);
-    videoSegMasks.push_back(pairfirst);
-    videoSegMasks.push_back(pairlast);
+    std::pair<cv::Mat,cv::Mat> pairfirst = std::make_pair(this->ffirst_mask,this->ffirst_ret_mask);
+    std::pair<cv::Mat,cv::Mat> pairlast = std::make_pair(this->flast_mask,this->flast_ret_mask);
+    segmasks.push_back(pairfirst);
+    segmasks.push_back(pairlast);
     
-    double mIoU = compute_mIoU(videoSegMasks,6);
+    double mIoU = compute_mIoU(segmasks,6);
     std::cout << "mIoU = " << mIoU << std::endl;
 }
 
-
-
-
-
-
 //-----------------------------------------------------------
 
-cv::Mat displayMask(const cv::Mat& mask){
+cv::Mat videoHandler::displayMask(const cv::Mat& mask){
     cv::Mat bgr;
     cv::cvtColor(mask, bgr, cv::COLOR_GRAY2BGR);
 
@@ -218,7 +229,7 @@ cv::Mat displayMask(const cv::Mat& mask){
     return colored;
 }
 
-cv::Mat plot_bb(const cv::Mat& src, const cv::Mat& bb){
+cv::Mat videoHandler::plot_bb(const cv::Mat& src, const cv::Mat& bb){
     cv::Mat edit = src.clone();
 
     //build LUT to convert class values [0..5] to BGR colors
