@@ -3,7 +3,7 @@ AUTHOR: Girardello Sofia
 */
 
 #include "trajectoryTracking.h"
- #include <opencv2/tracking.hpp>
+#include <opencv2/tracking.hpp>
 
 // Constructor to initialize the frame
 trajectoryTracker::trajectoryTracker() {

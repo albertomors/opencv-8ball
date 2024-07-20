@@ -227,20 +227,25 @@ void trajectoryProjecter::projectBalls(const cv::Mat& frame, const std::vector<c
 
     // Define a color map for different IDs
     std::map<int, cv::Scalar> colorMap = {
-        {0, cv::Scalar(0, 0, 255)}, // Red for ID 1
-        {1, cv::Scalar(0, 255, 0)}, // Green for ID 2
-        {2, cv::Scalar(255, 0, 0)}, // Blue for ID 3
-        // Add more colors for additional IDs as needed
+        {1, cv::Scalar(255, 255, 255)}, // White for ID 1
+        {2, cv::Scalar(0, 0, 0)}, // Black for ID 2
+        {3, cv::Scalar(0, 0, 255)}, // Red for ID 3
+        {4, cv::Scalar(255, 0, 0)}, // Blue for ID 4
     };
 
     // Draw the balls and trajectories on the resized table image before overlaying
     for (size_t i = 0; i < birdEyeBallPositions.size(); ++i) {
         int id = id_balls[i];
-        cv::Scalar color = colorMap[id % colorMap.size()]; // Assign color based on ID
-        cv::Point2f pos = birdEyeBallPositions[i];
-        cv::circle(resizedTableImage, pos, 5, color, -1);
+        std::cout << id << std::endl;
+        // Ensure the ID exists in the color map
+        if (colorMap.find(id) != colorMap.end()) {
+            cv::Scalar color = colorMap[id];  // Assign color based on ID
+            cv::Point2f pos = birdEyeBallPositions[i];
+            cv::circle(resizedTableImage, pos, 5, color, -1);
+        } else {
+            std::cerr << "Warning: ID " << id << " not found in color map!" << std::endl;
+        }
     }
-
     // Draw the balls on the bird's-eye view
     /*for (const auto& pos : birdEyeBallPositions) {
         cv::circle(resizedTableImage, pos, 5, cv::Scalar(0, 0, 255), -1);
@@ -249,7 +254,7 @@ void trajectoryProjecter::projectBalls(const cv::Mat& frame, const std::vector<c
     // Draw the trajectories on the bird's-eye view
     for (const auto& trajectory : birdEyeTrajectories) {
         for (size_t j = 1; j < trajectory.size(); ++j) {
-            cv::line(resizedTableImage, trajectory[j - 1], trajectory[j], cv::Scalar(0, 255, 0), 2);
+            cv::line(resizedTableImage, trajectory[j - 1], trajectory[j], cv::Scalar(255, 255, 255), 2);
         }
     }
 

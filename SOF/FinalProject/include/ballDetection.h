@@ -25,6 +25,8 @@
     std::vector<cv::Rect> balls;
     std::vector<int> id_balls;
     cv::Mat table_roi;
+    cv::Mat bbox_data;
+    cv::Mat classification_res;
 
 
     //explicit ballDetector(const cv::Mat currentFrame, std::vector<cv::Point> edgePoints);
@@ -34,7 +36,7 @@
 
     void drawDetection();
 
-    bool analyzeBallPattern(const cv::Mat& ballROI, const cv::Point& center, int radius);
+    int analyzeBallPattern(const cv::Mat& ballROI, const cv::Point& center, int radius);
 
   };
 #endif
