@@ -24,8 +24,8 @@ class trajectoryProjecter{
 
     explicit trajectoryProjecter();
 
-    void findLines(const cv::Mat& current_frame, const cv::Mat& roi);
-    void projectBalls(const cv::Mat& frame, const std::vector<cv::Point2f>& balls);
+    void findLines(const cv::Mat& current_frame, std::vector<cv::Point>& hull);
+    void projectBalls(const cv::Mat& frame, const std::vector<cv::Point2f>& centers, const std::vector<std::vector<cv::Point2f>>& trajectories, const std::vector<int>& id_balls);
 
 };
 

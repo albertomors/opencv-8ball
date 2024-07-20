@@ -34,7 +34,7 @@ void trajectoryTracker::initializeTrackers(const cv::Mat& frame, const std::vect
     csrtParams.scale_model_max_area = 512;   // Scale model max area
     csrtParams.scale_lr = 0.001;             // Scale learning rate
     csrtParams.scale_step = 1.01;            // Scale step
-    csrtParams.psr_threshold = 0.05;          // PSR threshold
+    csrtParams.psr_threshold = 0.05;         // PSR threshold
 
 
     for (const auto& bbox : initial_bboxes) {
@@ -48,6 +48,11 @@ void trajectoryTracker::initializeTrackers(const cv::Mat& frame, const std::vect
 
 
    void trajectoryTracker::updateTrackers(const cv::Mat& frame) {
+
+        // Clear previous centers and trajectories
+        this->centers.clear();
+        this->trajectories.clear();
+
         // Update all trackers
         for (size_t i = 0; i < this->trackers.size(); ++i) {
             cv::Rect bbox;
@@ -66,12 +71,17 @@ void trajectoryTracker::initializeTrackers(const cv::Mat& frame, const std::vect
 
                 // Draw the center
                 cv::circle(frame, center, 5, cv::Scalar(0, 255, 0), -1);
+
+                // Store the center and trajectory
+                this->centers.push_back(center);
+                this->trajectories.push_back(this->ballTrajectories[i]);
+
             } else {
                 std::cout << "Tracker " << i << " lost the object." << std::endl;
             }
         }
 
         cv::imshow("Ball Tracking", frame);
-        cv::waitKey(1);
+        //cv::waitKey(1);
     }
 

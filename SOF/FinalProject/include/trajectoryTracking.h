@@ -23,6 +23,9 @@
     
     public:
 
+    std::vector<cv::Point2f> centers;
+    std::vector<std::vector<cv::Point2f>> trajectories;
+
     explicit trajectoryTracker();
 
     void initializeTrackers(const cv::Mat& frame, const std::vector<cv::Rect>& centers);

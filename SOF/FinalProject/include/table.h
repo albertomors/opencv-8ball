@@ -18,7 +18,6 @@ class tableDetector{
   private:
 
       cv::Mat origin_frame;
-      std::vector<cv::Point> hull;    //external including them
       std::vector<cv::Point> contour; //internal excluding occlusion
 
       cv::Scalar get_dominant_color();
@@ -31,6 +30,7 @@ class tableDetector{
 
       cv::Mat seg_mask;
       float color;
+      std::vector<cv::Point> hull;    //external including them
 
       explicit tableDetector();
       void find_table(const cv::Mat& img);

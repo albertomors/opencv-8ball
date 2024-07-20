@@ -4,6 +4,29 @@ AUTHOR: Girardello Sofia
 
 #include "ballDetection.h"
 
+void enhanceContrast(cv::Mat& frame) {
+    // Convert the frame to the LAB color space
+    cv::Mat lab;
+    cv::cvtColor(frame, lab, cv::COLOR_BGR2Lab);
+
+    // Split the LAB image into separate channels
+    std::vector<cv::Mat> lab_channels(3);
+    cv::split(lab, lab_channels);
+
+    // Apply CLAHE to the L-channel
+    cv::Ptr<cv::CLAHE> clahe = cv::createCLAHE();
+    clahe->setClipLimit(7.0);
+    cv::Mat l_channel;
+    clahe->apply(lab_channels[0], l_channel);
+
+    // Merge the CLAHE enhanced L-channel back with the original A and B channels
+    l_channel.copyTo(lab_channels[0]);
+    cv::merge(lab_channels, lab);
+
+    // Convert the LAB image back to BGR color space
+    cv::cvtColor(lab, frame, cv::COLOR_Lab2BGR);
+}
+
 // Constructor to initialize the frame
 ballDetector::ballDetector() {
 }
@@ -24,8 +47,10 @@ void ballDetector::detectBalls(const cv::Mat& currentFrame, const cv::Mat& ROI, 
     //cv::imshow("ROI Mask Applied", table_roi);
     cv::waitKey(1);
 
+    //cv::GaussianBlur(table_roi, table_roi, cv::Size(9, 9), 2);
+    // Enhance contrast
+    enhanceContrast(table_roi);
 
-    
     // Convert the frame to HSV
     /*cv::Mat hsv_img;
     cv::cvtColor(table_roi, hsv_img, cv::COLOR_BGR2HSV);
@@ -41,7 +66,7 @@ void ballDetector::detectBalls(const cv::Mat& currentFrame, const cv::Mat& ROI, 
     int startY = (currentFrame.rows - areaSize) / 2;
 
     cv::Rect centerRect(startX, startY, areaSize, areaSize);
-    cv::Mat centerArea = currentFrame(centerRect);
+    cv::Mat centerArea = table_roi(centerRect);
 
     // Compute the average BGR color
     cv::Scalar avgBGR = cv::mean(centerArea);
@@ -60,14 +85,14 @@ void ballDetector::detectBalls(const cv::Mat& currentFrame, const cv::Mat& ROI, 
 
     // Thresholding based on the average center color to isolate balls
     cv::Mat mask_col;
-    cv::inRange(hsv_img, cv::Scalar(hsvColor[0] - 3, 10, 10), cv::Scalar(hsvColor[0] + 5, 255, 255), mask_col);
+    cv::inRange(hsv_img, cv::Scalar(hsvColor[0] - 10, 80, 80), cv::Scalar(hsvColor[0] + 13.9, 255, 255), mask_col);
     cv::imshow("Colour Thresholded Mask", mask_col);
 
     cv::Mat gray;
     cv::cvtColor(table_roi, gray, cv::COLOR_BGR2GRAY);
 
     std::vector<cv::Vec3f> circles;
-    cv::HoughCircles(gray, circles, cv::HOUGH_GRADIENT, 0.6, mask_col.rows / 30, 50, 10, 7, 13);
+    cv::HoughCircles(mask_col, circles, cv::HOUGH_GRADIENT, 1.03, mask_col.rows / 26, 30, 7.45, 5, 15);
 
     // Draw detected circles on the original table_roi image
     cv::Mat res1 = table_roi.clone();
@@ -104,7 +129,7 @@ void ballDetector::detectBalls(const cv::Mat& currentFrame, const cv::Mat& ROI, 
         double blackThreshArea1 = cv::countNonZero(threshCircle1);
         std::cout << "black  "<< blackThreshArea1 << "white  "<< whiteSegArea1;
 
-        if (whiteSegArea1/area1 > 0.7 && blackThreshArea1/area1 > 0.3 && blackThreshArea1/whiteSegArea1 > 0.3) { 
+        if (whiteSegArea1/area1 > 0.8 && blackThreshArea1/area1 > 0.6 && blackThreshArea1/whiteSegArea1 > 0.4) { 
 
             // Create a mask for the detected circle
             cv::Mat circleMask = cv::Mat::zeros(currentFrame.size(), CV_8UC1);
@@ -127,7 +152,7 @@ void ballDetector::detectBalls(const cv::Mat& currentFrame, const cv::Mat& ROI, 
             else this->id_balls.push_back(id_solid);
 
             // Create and save the rectangle around the center
-            int rect_size = radius*3;
+            int rect_size = radius*4;
             cv::Rect ballRect(center.x - radius, center.y - radius, rect_size, rect_size);
             this->balls.push_back(ballRect);
         }
