@@ -12,20 +12,29 @@ FILE: frameHandler.h
 #include <iostream>
 
 #include "table.h"
+#include "ballDetection.h"
+#include "trajectoryTracking.h"
+#include "trajectoryProjection.h"
 
 class frameHandler{
 
 private:
 
     tableDetector table;
-    //detector
-    //tracker
+    ballDetector detector;
+    trajectoryTracker tracker;
+    trajectoryProjecter projecter;
 
 public:
 
     explicit frameHandler();
 
     void detect_table(const cv::Mat& frame);
+    void detect_balls(const cv::Mat& frame);
+    void initializeTrackers(const cv::Mat& frame);
+    void updateTrackers(const cv::Mat& frame);
+    void project(const cv::Mat& frame);
+
     cv::Mat draw_frame(const cv::Mat& frame);
 };
 

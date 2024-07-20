@@ -19,7 +19,7 @@ videoHandler::videoHandler(const std::string& folder_name) {
 }
 
 void videoHandler::load_files() {
-    std::string mask_path = "../Dataset/" + folder_name + "/masks/";
+    std::string mask_path = "../res/Dataset/" + folder_name + "/masks/";
     this->ffirst_mask = cv::imread(mask_path + "frame_first.png", cv::IMREAD_GRAYSCALE);
     this->flast_mask = cv::imread(mask_path + "frame_last.png", cv::IMREAD_GRAYSCALE);
     if (ffirst_mask.empty() || flast_mask.empty()){
@@ -29,7 +29,7 @@ void videoHandler::load_files() {
         return;
     }
 
-    std::string bb_path = "../Dataset/" + folder_name + "/bounding_boxes/";
+    std::string bb_path = "../res/Dataset/" + folder_name + "/bounding_boxes/";
     this->ffirst_bb = load_txt_data(bb_path + "frame_first_bbox.txt");
     this->flast_bb = load_txt_data(bb_path + "frame_last_bbox.txt");
 }
@@ -65,7 +65,7 @@ cv::Mat videoHandler::load_txt_data(const std::string& path){
 }
 
 void videoHandler::process_video(int MIDSTEP_flag){
-    std::string folder_path = "../Dataset/" + folder_name;
+    std::string folder_path = "../res/Dataset/" + folder_name;
     std::string video_path = folder_path + "/" + folder_name + ".mp4";
 
     cv::VideoCapture capture(video_path);
@@ -87,8 +87,13 @@ void videoHandler::process_video(int MIDSTEP_flag){
 
     std::cout << "codec: " << codec << std::endl << "fps: " << fps << std::endl << "tot_frames: " << tot_frames << std::endl << "frame_size: " << frame_size << std::endl;
 
-    //create results folder in the root project path
-    std::string out_folder = "../results";
+    //create output folder inside build inside the root project path
+    std::string build_folder = "../build";
+    if (!cv::utils::fs::exists(build_folder)) {
+        cv::utils::fs::createDirectories(build_folder);
+        std::cout << "Succesfully created folder: " << build_folder << std::endl;
+    }
+    std::string out_folder = "../build/output";
     if (!cv::utils::fs::exists(out_folder)) {
         cv::utils::fs::createDirectories(out_folder);
         std::cout << "Succesfully created folder: " << out_folder << std::endl;
@@ -117,8 +122,8 @@ void videoHandler::process_video(int MIDSTEP_flag){
         //runs only for first frame or every if MIDSTEP_flag==true
         if (i==1 || MIDSTEP_flag){
             frame_handler.detect_table(frame_i);
-            //detect balls TODO
-            //classify balls TODO
+            frame_handler.detect_balls(frame_i);
+
             //get_seg_masks and bb TODO
             cv::Mat frame_i_ret_bb = this->ffirst_bb.clone(); //fantoccio per returned
             cv::Mat frame_i_ret_mask = this->ffirst_mask.clone();
@@ -131,6 +136,8 @@ void videoHandler::process_video(int MIDSTEP_flag){
 
             //in case you want to visualize all steps this saves the masks ONLY for first frame
             if (i==1){
+                frame_handler.initializeTrackers(frame_i);
+
                 this->ffirst_ret_bb = this->ffirst_bb.clone();
                 this->ffirst_ret_mask = this->ffirst_mask.clone();
                 cv::waitKey(0);
@@ -138,6 +145,9 @@ void videoHandler::process_video(int MIDSTEP_flag){
         }
 
         //runs for every frame
+        frame_handler.updateTrackers(frame_i);
+        frame_handler.project(frame_i);
+
         ret_frame = frame_handler.draw_frame(frame_i);
         cv::namedWindow("frame_i"); cv::imshow("frame_i", ret_frame);   
         cv::waitKey(1);

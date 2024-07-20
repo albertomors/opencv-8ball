@@ -18,8 +18,6 @@ class tableDetector{
   private:
 
       cv::Mat origin_frame;
-      std::vector<cv::Point> contour; //internal excluding occlusion
-      std::vector<cv::Point> hull;    //external including them
 
       cv::Scalar get_dominant_color();
       cv::Mat treshold_mask(const cv::Scalar& color);
@@ -27,9 +25,18 @@ class tableDetector{
       std::vector<cv::Point> find_contour(const cv::Mat& mask);
       std::vector<cv::Point> get_hull(const std::vector<cv::Point>&);
 
+      std::vector<cv::Point2f> find_corners(); //NEW
+      cv::Point2f get_intersection_point(const cv::Vec4i& line1, const cv::Vec4i& line2);
+
   public:
 
+      std::vector<cv::Point> contour;   //internal excluding occlusion
       cv::Mat seg_mask;
+      std::vector<cv::Point> hull;      //external including them
+      std::vector<cv::Point2f> corners; //NEW
+
+      float hue_color;
+      cv::Scalar bgr_color;
 
       explicit tableDetector();
       void find_table(const cv::Mat& img);
