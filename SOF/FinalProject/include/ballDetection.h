@@ -18,6 +18,8 @@
     cv::Mat frame;
     std::vector<cv::Point> field;
     bool draw;
+    std::vector<cv::Rect> bboxes;
+
     
     public:
 

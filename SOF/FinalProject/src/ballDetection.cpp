@@ -5,7 +5,8 @@ AUTHOR: Girardello Sofia
 #include "ballDetection.h"
 
 void enhanceContrast(cv::Mat& frame) {
-    // Convert the frame to the LAB color space
+
+    // Convert the frame to the LAB color space 
     cv::Mat lab;
     cv::cvtColor(frame, lab, cv::COLOR_BGR2Lab);
 
@@ -110,9 +111,6 @@ void ballDetector::detectBalls(const cv::Mat& currentFrame, const cv::Mat& ROI, 
     
     cv::Mat res = table_roi.clone();
 
-    // Create the output matrix with the appropriate type and size
-    cv::Mat detectedBallsData = cv::Mat::zeros(static_cast<int>(balls.size()), 5, CV_16U);
-
     for (size_t i = 0; i < circles.size(); i++) {
         cv::Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
         int radius = cvRound(circles[i][2]);
@@ -194,14 +192,22 @@ void ballDetector::detectBalls(const cv::Mat& currentFrame, const cv::Mat& ROI, 
             int height = 2 * radius;
 
             cv::Rect boundingBox(x, y, width, height);
+            this->bboxes.push_back(boundingBox);
 
-            detectedBallsData.at<uint16_t>(i, 0) = static_cast<uint16_t>(x);
-            detectedBallsData.at<uint16_t>(i, 1) = static_cast<uint16_t>(y);
-            detectedBallsData.at<uint16_t>(i, 2) = static_cast<uint16_t>(width);
-            detectedBallsData.at<uint16_t>(i, 3) = static_cast<uint16_t>(height);
-            detectedBallsData.at<uint16_t>(i, 4) = static_cast<uint16_t>(ballID);
+
         }
     }
+
+    cv::Mat detectedBallsData = cv::Mat::zeros(static_cast<int>(balls.size()), 5, CV_16U);
+
+    for (size_t i = 0; i < balls.size(); ++i) {
+        detectedBallsData.at<uint16_t>(i, 0) = static_cast<uint16_t>(bboxes[i].x);
+        detectedBallsData.at<uint16_t>(i, 1) = static_cast<uint16_t>(bboxes[i].y);
+        detectedBallsData.at<uint16_t>(i, 2) = static_cast<uint16_t>(bboxes[i].width);
+        detectedBallsData.at<uint16_t>(i, 3) = static_cast<uint16_t>(bboxes[i].height);
+        detectedBallsData.at<uint16_t>(i, 4) = static_cast<uint16_t>(id_balls[i]);
+    }
+
 
     this->bbox_data = detectedBallsData;
 
@@ -229,6 +235,8 @@ void ballDetector::detectBalls(const cv::Mat& currentFrame, const cv::Mat& ROI, 
     }
 
     this->classification_res = labeledImage;
+
+    
 
     cv::imshow("Detected Balls", res);
 
