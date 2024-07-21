@@ -1,6 +1,6 @@
 /*
     AUTHOR: Fresco Eleonora
-    DATE: 2024-07-21
+    DATE: 2024-07-21 
     FILE: videoHandler.cpp
     DESCRIPTION: Implements the `videoHandler` class for processing video files. This class extracts frames from a video, processes each frame to detect tables and balls, and builds a final video with the results. It also handles metrics computation for evaluation.
 

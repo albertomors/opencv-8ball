@@ -1,6 +1,6 @@
 /*
     AUTHOR: Morselli Alberto
-    DATE: 2024-07-21
+    DATE: 2024-07-21 
     FILE: table.cpp
     DESCRIPTION: Contains the implementation of the `tableDetector` class. This class provides functionality for detecting and processing the table within an image, including color detection, thresholding, finding contours, and detecting table corners.
 

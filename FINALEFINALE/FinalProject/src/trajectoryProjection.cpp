@@ -1,6 +1,6 @@
 /*
     AUTHOR: Fresco Eleonora
-    DATE: 2024-07-21
+    DATE: 2024-07-21 
     FILE: trajectoryProjection.cpp
     DESCRIPTION: Implementation of the trajectory projection algorithm for billiard balls onto a table minimap. This module computes the bird's-eye view of the balls and their trajectories using perspective transforms.
 

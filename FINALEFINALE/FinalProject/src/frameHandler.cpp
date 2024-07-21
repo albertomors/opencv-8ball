@@ -1,5 +1,5 @@
 /*
-    AUTHOR: 
+    AUTHOR:
     DATE: 2024-07-21
     FILE: frameHandler.cpp
     DESCRIPTION: Implements the frame handler class to manage table detection, ball detection, ball tracking, and trajectory projection in a video feed.

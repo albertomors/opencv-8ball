@@ -1,6 +1,6 @@
 /*
     AUTHOR: Girardello Sofia
-    DATE: 2024-07-21
+    DATE: 2024-07-21 
     FILE: trajectoryTracking.cpp
     DESCRIPTION: Implements the trajectory tracking class using OpenCV trackers.
 

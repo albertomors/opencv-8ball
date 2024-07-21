@@ -1,6 +1,6 @@
 /*
     AUTHOR: 
-    DATE: 2024-07-21
+    DATE: 2024-07-21 
     FILE: main.cpp
     DESCRIPTION: Main entry point for the application that handles video processing. It initializes the video handler and processes the video based on command line arguments.
 
