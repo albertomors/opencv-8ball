@@ -136,57 +136,46 @@ void videoHandler::process_video(int MIDSTEP_flag){
         // Elaborate video - call frameHandler --------------------
 
         // Runs only for first frame or every if MIDSTEP_flag==true
-        if (i==1 || MIDSTEP_flag){
-
+        if (i==1 || i==tot_frames || MIDSTEP_flag){
             frame_handler.detect_table(frame_i);
-
+            std::cout << "DET TABLE" << std::endl;
             if (i==1){
-                frame_handler.save_table_corners();
-            }
-
+                std::cout << "SAVE TABLE CORNERS" << std::endl;
+                frame_handler.save_table_corners();}
             frame_handler.detect_balls(frame_i);
-
-            // Get_seg_masks and bb 
-            cv::Mat frame_i_ret_bb = frame_handler.bbox_data;
-            cv::Mat frame_i_ret_mask = frame_handler.classification_res;
-
-            // Instead this runs at every frame if MIDSTEP_flag==true
-            cv::namedWindow("bb"); cv::imshow("bb", this->plot_bb(frame_i, frame_i_ret_bb));
-            cv::namedWindow("mask"); cv::imshow("mask", this->displayMask(frame_i_ret_mask));
-            ret_frame = frame_handler.draw_frame(frame_i);
-            cv::namedWindow("frame_i"); cv::imshow("frame_i", ret_frame);   
-
-            // In case you want to visualize all steps this saves the masks ONLY for first frame
+            std::cout << "DET BALLS" << std::endl;
             if (i==1){
+                std::cout << "INITIALIZE TRACKERS" << std::endl;
                 frame_handler.initializeTrackers(frame_i);
                 frame_handler.save_ids();
-
-                this->ffirst_ret_bb = frame_handler.bbox_data;
-                this->ffirst_ret_mask = frame_handler.classification_res;
-                std::cout << "Press any key to proceed..." << std::endl;
-                cv::waitKey(0);
             }
         }
 
         // Runs for every frame
+        std::cout << "UPDATE TRACKERS" << std::endl;
         frame_handler.updateTrackers(frame_i);
-        ret_frame = frame_handler.draw_frame(frame_i);
-        ret_frame = frame_handler.project(ret_frame);
-        cv::namedWindow("frame_i"); cv::imshow("frame_i", ret_frame);   
+        cv::Mat w_borders_on = frame_handler.draw_frame(frame_i);
+        ret_frame = frame_handler.project(w_borders_on);
+        cv::namedWindow("frame_i"); cv::imshow("frame_i", ret_frame);  
         cv::waitKey(1);
+        std::cout << "PROJ IMAGE" << std::endl;
+        
+        //SAVES ONLY FIRST AND LAST
+        if (i==1 || i==tot_frames || MIDSTEP_flag){
+            if (i==1){
+                std::cout << "SAVE FIRST" << std::endl;
+                this->ffirst_ret_bb = frame_handler.bbox_data;
+                this->ffirst_ret_mask = frame_handler.classification_res;
+            }
+            else if(i==tot_frames){
+                std::cout << "SAVE LAST" << std::endl;
+                this->flast_ret_bb = frame_handler.bbox_data;
+                this->flast_ret_mask = frame_handler.classification_res;
+            }
 
-        // Runs only for last frame
-        if(i==tot_frames-1){
-            
-            frame_handler.detect_table(frame_i);
-            //frame_handler.detect_balls(frame_i);
-            frame_handler.detect_balls_final(frame_i);
-            //get_seg_masks and bb
-            this->flast_ret_bb = frame_handler.bbox_data;
-            this->flast_ret_mask = frame_handler.classification_res;
-
-            cv::namedWindow("mask"); cv::imshow("mask", this->displayMask(this->flast_ret_mask));
-            cv::namedWindow("bb"); cv::imshow("bb", this->plot_bb(frame_i, this->flast_ret_bb));
+            std::cout << "SHOW MASKS" << std::endl;
+            cv::namedWindow("bb"); cv::imshow("bb", this->plot_bb(w_borders_on, frame_handler.bbox_data));
+            cv::namedWindow("mask"); cv::imshow("mask", this->displayMask(frame_handler.classification_res));
             std::cout << "Press any key to proceed..." << std::endl;
             cv::waitKey(0);
         }

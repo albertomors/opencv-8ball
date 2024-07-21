@@ -144,6 +144,13 @@ cv::Mat trajectoryProjecter::projectBalls(const cv::Mat& frame, const std::vecto
         {4, cv::Scalar(255, 0, 0)},     // Blue for ID 4
     };
 
+    // Draw the trajectories on the bird's-eye view
+    for (const auto& trajectory : birdEyeTrajectories) {
+        for (size_t j = 1; j < trajectory.size(); ++j) {
+            cv::line(resizedTableImage, trajectory[j - 1], trajectory[j], cv::Scalar(0, 255, 255), 2);
+        }
+    }
+
     // Draw the balls on the resized minimap table image before overlaying
     for (size_t i = 0; i < birdEyeBallPositions.size(); ++i) {
         int id = id_balls[i];
@@ -157,12 +164,6 @@ cv::Mat trajectoryProjecter::projectBalls(const cv::Mat& frame, const std::vecto
         }
     }
 
-    // Draw the trajectories on the bird's-eye view
-    for (const auto& trajectory : birdEyeTrajectories) {
-        for (size_t j = 1; j < trajectory.size(); ++j) {
-            cv::line(resizedTableImage, trajectory[j - 1], trajectory[j], cv::Scalar(0, 0, 255), 2);
-        }
-    }
 
     // Create a copy of the frame to avoid modifying the original frame
     cv::Mat frameWithOverlay = frame.clone();
