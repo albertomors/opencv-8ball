@@ -1,6 +1,6 @@
 /*
     AUTHOR: Fresco Eleonora
-    DATE: 2024-07-21
+    DATE: 2024-07-21 
     FILE: videoHandler.h
     DESCRIPTION: Defines the `videoHandler` class for processing video files. 
 

@@ -1,5 +1,5 @@
 /*
-    AUTHOR: Girardello Sofia
+    AUTHOR: Girardello Sofia 
     DATE: 2024-07-21
     FILE: trajectoryTracking.h
     DESCRIPTION: Defines the trajectory tracking class using OpenCV trackers.

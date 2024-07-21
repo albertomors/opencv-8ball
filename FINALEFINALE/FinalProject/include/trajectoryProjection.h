@@ -1,5 +1,5 @@
 /*
-    AUTHOR: Fresco Eleonora
+    AUTHOR: Fresco Eleonora 
     DATE: 2024-07-21
     FILE: trajectoryProjection.h
     DESCRIPTION: Definition of the trajectory projecting class.

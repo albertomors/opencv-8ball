@@ -1,5 +1,5 @@
 /*
-    AUTHOR:
+    AUTHOR: 
     DATE: 2024-07-21
     FILE: frameHandler.h
     DESCRIPTION: Created the class that handles all the operations to perform on the single frame.

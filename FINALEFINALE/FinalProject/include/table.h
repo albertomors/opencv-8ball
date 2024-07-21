@@ -1,5 +1,5 @@
 /*
-    AUTHOR: Morselli Alberto
+    AUTHOR: Morselli Alberto 
     DATE: 2024-07-21
     FILE: table.h
     DESCRIPTION: Definition of the tableDetector class.

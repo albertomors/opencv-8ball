@@ -1,6 +1,6 @@
 /*
     AUTHOR: Girardello Sofia
-    DATE: 2024-07-21
+    DATE: 2024-07-21 
     FILE: ballDetector.h
     DESCRIPTION: Description of the class that detects and classificates the balls.
 
