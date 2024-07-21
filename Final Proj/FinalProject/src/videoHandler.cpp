@@ -1,11 +1,26 @@
 /*
-AUTHOR: Morselli Alberto 
-FILE: videoHandler.cpp
+    AUTHOR: Fresco Eleonora
+    DATE: 2024-07-21
+    FILE: videoHandler.cpp
+    DESCRIPTION: Implements the `videoHandler` class for processing video files. This class extracts frames from a video, processes each frame to detect tables and balls, and builds a final video with the results. It also handles metrics computation for evaluation.
 
--given the folder path extract the frames and pass them to frameHandler
--show frame by frame results if flag is true, otherwise just first and final
--receive frames from frameHandler to build the final video
--call metrics at the end
+    CLASS: videoHandler
+
+    METHODS:
+    - videoHandler(const std::string& folder_name): Constructor that initializes the `videoHandler` object by setting up paths and loading necessary files based on the provided folder name.
+    - void load_files(): Loads segmentation mask and bounding box data for the first and last frames. Handles errors if files cannot be loaded.
+    - cv::Mat load_txt_data(...): Reads bounding box data from a text file and stores it in a `cv::Mat` matrix.
+    - void process_video(...): Processes the video file frame by frame. Calls `frameHandler` to perform table and ball detection. Displays intermediate results based on the `MIDSTEP_flag` and writes processed frames to an output video file.
+    - cv::Mat displayMask(...): Converts and displays segmentation masks using a predefined color map for different classes.
+    - cv::Mat plot_bb(...): Draws bounding boxes on the source image using colors based on class labels.
+
+    USAGE:
+    - The `videoHandler` class is used to manage the end-to-end process of video frame extraction, processing, and output. It interacts with the `frameHandler` class to detect and analyze objects within the frames, and produces a final video with the results.
+
+    IMPORTANT:
+    - Ensure the paths and file names used in `load_files` match the actual dataset structure.
+    - The output video and metrics are saved to the `../build/output` directory. Ensure this directory is writable.
+    - The `MIDSTEP_flag` allows toggling between visualizing all frames or just the first and last frames for debugging purposes.
 */
 
 #include "videoHandler.h"
@@ -42,19 +57,19 @@ cv::Mat videoHandler::load_txt_data(const std::string& path){
         return cv::Mat{};
     }
 
-    //process file and store data in a vector
+    // Process file and store data in a vector
     std::vector<int> data;
     int value;
     while (file >> value)
         data.push_back(value);
     file.close();
 
-    //create data matrix
+    // Create data matrix
     int rows = data.size() / 5;
     int cols = 5;
     cv::Mat data_matrix(rows, cols, CV_16U);
 
-    //fill-in matrix
+    // Fill-in matrix
     int idx = 0;
     for (int i=0; i<rows; ++i) {
         for (int j=0; j<cols; ++j) {
@@ -77,7 +92,7 @@ void videoHandler::process_video(int MIDSTEP_flag){
         return;
     }
 
-    //get video properties
+    // Get video properties
     int codec = capture.get(cv::CAP_PROP_FOURCC);
     double fps = capture.get(cv::CAP_PROP_FPS);
     int tot_frames = static_cast<int>(capture.get(cv::CAP_PROP_FRAME_COUNT));
@@ -87,7 +102,7 @@ void videoHandler::process_video(int MIDSTEP_flag){
 
     std::cout << "codec: " << codec << std::endl << "fps: " << fps << std::endl << "tot_frames: " << tot_frames << std::endl << "frame_size: " << frame_size << std::endl;
 
-    //create output folder inside build inside the root project path
+    // Create output folder inside build inside the root project path
     std::string build_folder = "../build";
     if (!cv::utils::fs::exists(build_folder)) {
         cv::utils::fs::createDirectories(build_folder);
@@ -118,10 +133,10 @@ void videoHandler::process_video(int MIDSTEP_flag){
         capture >> frame_i;
         std::cout << "frame " << i << "/" << tot_frames << std::endl;
 
-        //elaborate video - call frameHandler --------------------
+        // Elaborate video - call frameHandler --------------------
 
-        //runs only for first frame or every if MIDSTEP_flag==true
-        if (i==1 || MIDSTEP_flag){
+        // Runs only for first frame or every if MIDSTEP_flag==true
+        if (i==1 || MIDSTEP_flag || i!=tot_frames-1){
 
             frame_handler.detect_table(frame_i);
 
@@ -131,17 +146,17 @@ void videoHandler::process_video(int MIDSTEP_flag){
 
             frame_handler.detect_balls(frame_i);
 
-            //get_seg_masks and bb TODO
+            // Get_seg_masks and bb 
             cv::Mat frame_i_ret_bb = frame_handler.bbox_data;
             cv::Mat frame_i_ret_mask = frame_handler.classification_res;
 
-            //instead this runs at every frame if MIDSTEP_flag==true
+            // Instead this runs at every frame if MIDSTEP_flag==true
             cv::namedWindow("bb"); cv::imshow("bb", this->plot_bb(frame_i, frame_i_ret_bb));
             cv::namedWindow("mask"); cv::imshow("mask", this->displayMask(frame_i_ret_mask));
             ret_frame = frame_handler.draw_frame(frame_i);
             cv::namedWindow("frame_i"); cv::imshow("frame_i", ret_frame);   
 
-            //in case you want to visualize all steps this saves the masks ONLY for first frame
+            // In case you want to visualize all steps this saves the masks ONLY for first frame
             if (i==1){
                 frame_handler.initializeTrackers(frame_i);
                 frame_handler.save_ids();
@@ -152,7 +167,7 @@ void videoHandler::process_video(int MIDSTEP_flag){
             }
         }
 
-        //runs for every frame
+        // Runs for every frame
         frame_handler.updateTrackers(frame_i);
         frame_handler.project(frame_i);
 
@@ -160,10 +175,10 @@ void videoHandler::process_video(int MIDSTEP_flag){
         cv::namedWindow("frame_i"); cv::imshow("frame_i", ret_frame);   
         cv::waitKey(1);
 
-        //runs only for last frame
+        // Runs only for last frame
         if(i==tot_frames-1){
 
-            std::cout << "sono qui";
+            //frame_handler.detect_balls(frame_i);
             frame_handler.detect_balls_final(frame_i);
             //get_seg_masks and bb
             this->flast_ret_bb = frame_handler.bbox_data;
@@ -188,17 +203,10 @@ void videoHandler::process_video(int MIDSTEP_flag){
     writer.release();
     std::cout << "Video saved at " << out_path << "." << std::endl;
 
-    /*
-    call to
-    compute metrics
-    ...
-    */
-
     std::cout << "---METRICS-------------" << std::endl;
     double mAP = compute_mAP(this->ffirst_bb,this->ffirst_ret_bb) + compute_mAP(this->flast_bb,this->flast_ret_bb);
     std::cout << "mAP = " << mAP/2.0 << std::endl;
     
-    //qua provo solo a sporcare un po' la maschera di seg con due rettangoli
     std::vector<std::pair<cv::Mat, cv::Mat>> segmasks;
     cv::rectangle(this->ffirst_ret_mask,cv::Rect(300,300,50,50),cv::Scalar(3),cv::FILLED);
     cv::rectangle(this->ffirst_ret_mask,cv::Rect(657,342,23,102),cv::Scalar(1),cv::FILLED);

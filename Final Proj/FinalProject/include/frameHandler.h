@@ -1,6 +1,25 @@
 /*
-AUTHOR: Morselli Alberto 
-FILE: frameHandler.h
+    AUTHOR:
+    DATE: 2024-07-21
+    FILE: frameHandler.h
+    DESCRIPTION: Created the class that handles all the operations to perform on the single frame.
+
+    CLASSES:
+    - class frameHandler: Class for handling frames, including detecting tables and balls, initializing and updating trackers, and projecting ball trajectories.
+
+    MAIN FUNCTIONS:
+    - frameHandler(): Constructor to initialize the frameHandler object.
+    - void detect_table(...): Detects the table in the given frame.
+    - void detect_balls(...): Detects balls in the given frame.
+    - void detect_balls_final(...): Detects balls in the final frame and matches them with tracker centers.
+    - void initializeTrackers(...): Initializes trackers for the detected balls.
+    - void updateTrackers(...): Updates the trackers with the current frame.
+    - cv::Mat draw_frame(...): Draws the borders of the table on the given frame.
+    - void project(...): Projects the ball trajectories on the given frame.
+
+    ADDITIONAL FUNCTIONS:
+    - save_table_corners(): Stores the corners of the detected table for later use.
+    - save_ids(): Stores the IDs of the detected balls for later use.
 */
 
 #ifndef FRAMEHANDLER_INCLUDED
@@ -43,8 +62,8 @@ public:
     void save_ids();
     void updateTrackers(const cv::Mat& frame);
     void project(const cv::Mat& frame);
-
     cv::Mat draw_frame(const cv::Mat& frame);
+
 };
 
 #endif

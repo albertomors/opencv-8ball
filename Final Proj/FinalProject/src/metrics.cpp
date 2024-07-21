@@ -1,10 +1,27 @@
-/* /*
-AUTHOR: Morselli Alberto 
-FILE: metrics.cpp
+/*
+    AUTHOR: Fresco Eleonora
+    DATE: 2024-07-21
+    FILE: metrics.cpp
+    DESCRIPTION: Implements functions for computing various performance metrics related to object detection and tracking. 
 
--called by videoHandler
--compute metrics, show and save them
+    FUNCTIONS:
+    - double compute_IoU(...): Computes the Intersection over Union (IoU) between two bounding boxes.
+    - std::vector<cv::Point2f> get_PR_table(...): Generates a Precision-Recall (PR) table for a specific class based on predicted and ground truth bounding boxes.
+    - std::vector<cv::Point2f> refine_PR_table(...): Refines the PR table by removing coincident points and flattening segments to the next maximum.
+    - double compute_mAP(...): Computes the mean Average Precision (mAP) over all classes using the PR table.
+    - double compute_IoU_px(...): Calculates the IoU for a specific class at the pixel level.
+    - double compute_mIoU(...): Computes the mean IoU (mIoU) between ground truth and predicted segmentation masks over a video sequence.
+
+    NOTES:
+    - IoU is computed by finding the intersection and union of two bounding boxes.
+    - PR tables are generated to evaluate precision and recall at different thresholds.
+    - mAP is computed by averaging the AP values over all classes.
+    - mIoU is computed over the entire video sequence by comparing segmentation masks for the first and last frames.
+
+    USAGE:
+    - These metrics are used to evaluate the performance of object detection and tracking algorithms by comparing predicted results with ground truth.
 */
+
 
 #include "metrics.h"
 
@@ -22,19 +39,19 @@ both pred can have less rows than true if we have missed predictions, more rows 
 both have 5 <uint16_t> items per row = x y w h class
 */
 std::vector<cv::Point2f> get_PR_table(const cv::Mat& pred_bb, const cv::Mat& true_bb, int pred_class){
-    //initialize cumulative indexes
+    // Initialize cumulative indexes
     int TP = 0;
     int FP = 0;
     float P, R;
     std::vector<cv::Point2f> PR_points;
 
-    //pre-iteration over groundtruth to get total GT
+    // Pre-iteration over groundtruth to get total GT
     int totalGT = 0;
     for(int i=0; i<true_bb.rows; ++i)
         totalGT += (true_bb.at<uint16_t>(i,4) == pred_class);
 
-    //handle the scenario where no matching GT (true_bb) is present for the class
-    //all preds will be FP => TP=0 - avoid all checks
+    // Handle the scenario where no matching GT (true_bb) is present for the class
+    // All preds will be FP => TP=0 - avoid all checks
     if(totalGT == 0){
         cv::Point2f point(1.0,0.0);
         PR_points.push_back(point); //append point to array
@@ -42,10 +59,10 @@ std::vector<cv::Point2f> get_PR_table(const cv::Mat& pred_bb, const cv::Mat& tru
         return PR_points;
     }
 
-    //iterate over predictions
+    // Iterate over predictions
     uint16_t x,y,w,h;
     for(int i=0; i<pred_bb.rows; ++i){
-        //but look only at the ones belonging to the class we're analyzing
+        // But look only at the ones belonging to the class we're analyzing
         if(pred_bb.at<uint16_t>(i,4) == pred_class){ 
             bool isTP = false;
 
@@ -55,9 +72,9 @@ std::vector<cv::Point2f> get_PR_table(const cv::Mat& pred_bb, const cv::Mat& tru
             h = pred_bb.at<uint16_t>(i,3);
             cv::Rect pred_rect(x,y,w,h);
             
-            //iterate all over groudtruths
+            // Iterate all over groudtruths
             for(int j=0; j<true_bb.rows; ++j){
-                //but look only at the ones belonging to the same class
+                // But look only at the ones belonging to the same class
                 if(true_bb.at<uint16_t>(j,4) == pred_class){ 
                     x = true_bb.at<uint16_t>(j,0);
                     y = true_bb.at<uint16_t>(j,1);
@@ -66,65 +83,64 @@ std::vector<cv::Point2f> get_PR_table(const cv::Mat& pred_bb, const cv::Mat& tru
                     cv::Rect true_rect(x,y,w,h);
 
                     float IoU = compute_IoU(pred_rect, true_rect);
-                    //std::cout << i << "," << j << "] " << pred_rect << "vs" << true_rect << " = " << IoU << std::endl;
+                    //--Debug  std::cout << i << "," << j << "] " << pred_rect << "vs" << true_rect << " = " << IoU << std::endl;
                     
                     if( IoU >= 0.5){
-                        //found the matching => true positive - stop searching
+                        // Found the matching => true positive - stop searching
                         isTP = true;
                         break;
                     }
-                    //otherwise continue looking for the potential matching
+                    // Otherwise continue looking for the potential matching
                 }
             }
 
             if(isTP){TP++;}
             else{FP++;}
 
-            //compute P,R indexes
+            // Compute P,R indexes
             P = static_cast<float>(TP)/static_cast<float>(TP+FP);
             R = static_cast<float>(TP)/static_cast<float>(totalGT); //true_bb.rows = total groundtruth
             float R_quantized = std::round(R * 10.0f) / 10.0f; //round the R values to +-0.1 for 11-point interpolation
 
-            //std::cout << TP << ":" << FP << " | PR=" << P << ":" << R << "-->" << R_quantized << std::endl;
+            //--Debug  std::cout << TP << ":" << FP << " | PR=" << P << ":" << R << "-->" << R_quantized << std::endl;
             
-            cv::Point2f point(R_quantized,P); //R=x, P=y
-            PR_points.push_back(point); //append point to array
+            cv::Point2f point(R_quantized,P); // R=x, P=y
+            PR_points.push_back(point); // Append point to array
         }
     }
 
-    //handle the scenario where no prediction bb is present => all pred are FN or TN
+    // Handle the scenario where no prediction bb is present => all pred are FN or TN
     if(PR_points.size() == 0){
-        //at this point if we have GTs but no pred = FN (bad)
-        //otherwise if no pred but also no GT => TN (good)
+        // At this point if we have GTs but no pred = FN (bad)
+        // Otherwise if no pred but also no GT => TN (good)
         cv::Point2f point = cv::Point2f(1.0,0.0);
         PR_points.push_back(point); //append point to array
         std::cout << "No predictions are present for class " << pred_class << std::endl;
         return PR_points;
     }
 
-    //otherwise
     return PR_points;
 }
 
-//remove coincident points (deleting the lowest) also flattening oblique segments to the next max.
+// Remove coincident points (deleting the lowest) also flattening oblique segments to the next max.
 std::vector<cv::Point2f> refine_PR_table(std::vector<cv::Point2f>& points){
 
-    //keep non overlapping x-points
+    // Keep non overlapping x-points
     std::vector<cv::Point2f> unique_points;
     float last_seen = points[0].x;
     unique_points.push_back(points[0]);
 
     for(int i=1; i<points.size(); ++i){
-        if(points[i].x == last_seen){ //TODO check sull'equality che forse va messa la tolleranza
-            //since only v[i+1] <= v[i] can happen | keep the max == [i], remove [i+1]
-            continue; //dont push_back anything
+        if(points[i].x == last_seen){ 
+            // Since only v[i+1] <= v[i] can happen | keep the max == [i], remove [i+1]
+            continue; 
         }
-        //otherwise push it and update last seen
+        // Otherwise push it and update last seen
         unique_points.push_back(points[i]);
         last_seen = points[i].x;
     }
 
-    //now flat the y-values from right to left
+    // Now flat the y-values from right to left
     for(int i=unique_points.size()-1; i>0; --i){
         unique_points[i-1].y = std::max(unique_points[i-1].y, unique_points[i].y);
     }
@@ -136,7 +152,7 @@ double compute_mAP(const cv::Mat& pred_bb, const cv::Mat& true_bb){
     double mAP = 0.0;
     const int num_classes = 4;
 
-    //iterate over all classes
+    // Iterate over all classes
     for(int i=1; i<=num_classes; ++i){
         std::vector<cv::Point2f> PR_points = get_PR_table(pred_bb, true_bb, i);
         PR_points = refine_PR_table(PR_points);
@@ -160,8 +176,6 @@ double compute_mAP(const cv::Mat& pred_bb, const cv::Mat& true_bb){
     return mAP;
 }
 
-// ------------------------------------------------------------------------------------------------------------
-// Author: ELE
 
 // Function to calculate IoU for a single class (from 0 to 5)
 double compute_IoU_px(const cv::Mat& groundTruth, const cv::Mat& prediction, int classId) {
@@ -179,14 +193,15 @@ double compute_IoU_px(const cv::Mat& groundTruth, const cv::Mat& prediction, int
     int intersectionArea = cv::countNonZero(intersection);
     int unionArea = cv::countNonZero(union_);
 
-    //to avoid division by 0
+    // To avoid division by 0
     if (unionArea == 0) {
         return 0.0;
     }
-    // else return IoU
+    // Else return IoU
     double IoU = static_cast<double>(intersectionArea) / unionArea;
     return IoU;
 }
+
 
 // Function to compute the average mIoU for the considered video
 double compute_mIoU(const std::vector<std::pair<cv::Mat, cv::Mat>>& videoSegMasks, int numClasses) {

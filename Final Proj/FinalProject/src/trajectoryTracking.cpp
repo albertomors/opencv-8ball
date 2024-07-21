@@ -1,17 +1,29 @@
 /*
-AUTHOR: Girardello Sofia 
+    AUTHOR: Girardello Sofia
+    DATE: 2024-07-21
+    FILE: trajectoryTracking.cpp
+    DESCRIPTION: Implements the trajectory tracking class using OpenCV trackers.
+
+    CLASSES:
+    - class trajectoryTracker: Class for tracking the trajectories of multiple objects.
+
+    MAIN FUNCTIONS:
+    - trajectoryTracker(): Constructor to initialize the trajectoryTracker object.
+    - void initializeTrackers(...): Initializes trackers for the given bounding boxes.
+    - void updateTrackers(...): Updates the trackers with the current frame and stores the centers and trajectories.
 */
 
 #include "trajectoryTracking.h"
- #include <opencv2/tracking.hpp>
+#include <opencv2/tracking.hpp>
 
-// Constructor to initialize the frame
+// Constructor of the class
 trajectoryTracker::trajectoryTracker() {
 }
 
 
 void trajectoryTracker::initializeTrackers(const cv::Mat& frame, const std::vector<cv::Rect>& initial_bboxes){
 
+    // Definition of the parameters defining the trackers
     cv::TrackerCSRT::Params csrtParams;
     csrtParams.use_hog = true;               // Use HOG features
     csrtParams.use_color_names = true;       // Use Color Names features
@@ -37,7 +49,7 @@ void trajectoryTracker::initializeTrackers(const cv::Mat& frame, const std::vect
     csrtParams.psr_threshold = 0.05;         // PSR threshold
 
 
-    for (const auto& bbox : initial_bboxes) {
+    for (const cv::Rect& bbox : initial_bboxes) {
             cv::Ptr<cv::Tracker> tracker = cv::TrackerCSRT::create(csrtParams);
             tracker->init(frame, bbox);
             this->trackers.push_back(tracker);
@@ -58,30 +70,34 @@ void trajectoryTracker::initializeTrackers(const cv::Mat& frame, const std::vect
             cv::Rect bbox;
             bool ok = this->trackers[i]->update(frame, bbox);
             if (ok) {
-                // Draw bounding box
-                //cv::rectangle(frame, bbox, cv::Scalar(255, 0, 0), 2, 1);
+
 
                 cv::Point2f center(bbox.x + bbox.width / 2, bbox.y + bbox.height / 2);
                 this->ballTrajectories[i].push_back(center);
 
+                /* --Debug
+                // Draw bounding box
+                cv::rectangle(frame, bbox, cv::Scalar(255, 0, 0), 2, 1);
                 // Draw the trajectory
                 for (size_t j = 1; j < this->ballTrajectories[i].size(); ++j) {
-                    //cv::line(frame, this->ballTrajectories[i][j - 1], this->ballTrajectories[i][j], cv::Scalar(0, 255, 0), 2);
+                    cv::line(frame, this->ballTrajectories[i][j - 1], this->ballTrajectories[i][j], cv::Scalar(0, 255, 0), 2);
                 }
-
                 // Draw the center
-                //cv::circle(frame, center, 5, cv::Scalar(0, 255, 0), -1);
+                cv::circle(frame, center, 5, cv::Scalar(0, 255, 0), -1);
+                */
 
                 // Store the center and trajectory
                 this->centers.push_back(center);
                 this->trajectories.push_back(this->ballTrajectories[i]);
 
             } else {
-                std::cout << "Tracker " << i << " lost the object." << std::endl;
+                std::cout << "Tracker " << i << " lost the object!" << std::endl;
             }
         }
 
+        /* --Debug
         cv::imshow("Ball Tracking", frame);
-        //cv::waitKey(1);
+        cv::waitKey(1);*/
+
     }
 

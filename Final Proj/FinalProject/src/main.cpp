@@ -1,8 +1,27 @@
 /*
-AUTHOR: Morselli Alberto
-FILE: main.cpp
+    AUTHOR: 
+    DATE: 2024-07-21
+    FILE: main.cpp
+    DESCRIPTION: Main entry point for the application that handles video processing. It initializes the video handler and processes the video based on command line arguments.
 
-call videoHandler
+    FUNCTIONS:
+    - int main(int argc, char** argv): Main function that processes command line arguments, initializes the video handler, and processes the video.
+
+    PARAMETERS:
+    - argc: The number of command line arguments.
+    - argv: An array of command line arguments.
+
+    EXAMPLES:
+    - Input: Command line arguments specifying the folder name and a flag to view or not view the algorithm's mid-steps.
+    - Output: Processes the video and provides feedback on the completion status.
+
+    USAGE:
+    - Example: ./main game1_clip1 y
+      This command runs the program on the folder "game1_clip1" with the flag to view the algorithm's mid-steps.
+
+    NOTES:
+    - The program requires at least two command line arguments: the folder name and a flag to indicate whether to view the mid-steps of the algorithm.
+    - The program uses the videoHandler class to process the video and handles errors appropriately.
 */
 
 #include "videoHandler.h"
