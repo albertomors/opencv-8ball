@@ -1,0 +1,50 @@
+[
+{
+  "directory": "/Users/sofiagirardello/Desktop/ALB/FinalProject/build",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  -I/Users/sofiagirardello/Desktop/ALB/FinalProject/include -isystem /opt/homebrew/Cellar/opencv/4.10.0/include/opencv4 -g -std=gnu++11 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -o CMakeFiles/CVproject.dir/src/ballDetection.cpp.o -c /Users/sofiagirardello/Desktop/ALB/FinalProject/src/ballDetection.cpp",
+  "file": "/Users/sofiagirardello/Desktop/ALB/FinalProject/src/ballDetection.cpp",
+  "output": "CMakeFiles/CVproject.dir/src/ballDetection.cpp.o"
+},
+{
+  "directory": "/Users/sofiagirardello/Desktop/ALB/FinalProject/build",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  -I/Users/sofiagirardello/Desktop/ALB/FinalProject/include -isystem /opt/homebrew/Cellar/opencv/4.10.0/include/opencv4 -g -std=gnu++11 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -o CMakeFiles/CVproject.dir/src/frameHandler.cpp.o -c /Users/sofiagirardello/Desktop/ALB/FinalProject/src/frameHandler.cpp",
+  "file": "/Users/sofiagirardello/Desktop/ALB/FinalProject/src/frameHandler.cpp",
+  "output": "CMakeFiles/CVproject.dir/src/frameHandler.cpp.o"
+},
+{
+  "directory": "/Users/sofiagirardello/Desktop/ALB/FinalProject/build",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  -I/Users/sofiagirardello/Desktop/ALB/FinalProject/include -isystem /opt/homebrew/Cellar/opencv/4.10.0/include/opencv4 -g -std=gnu++11 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -o CMakeFiles/CVproject.dir/src/main.cpp.o -c /Users/sofiagirardello/Desktop/ALB/FinalProject/src/main.cpp",
+  "file": "/Users/sofiagirardello/Desktop/ALB/FinalProject/src/main.cpp",
+  "output": "CMakeFiles/CVproject.dir/src/main.cpp.o"
+},
+{
+  "directory": "/Users/sofiagirardello/Desktop/ALB/FinalProject/build",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  -I/Users/sofiagirardello/Desktop/ALB/FinalProject/include -isystem /opt/homebrew/Cellar/opencv/4.10.0/include/opencv4 -g -std=gnu++11 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -o CMakeFiles/CVproject.dir/src/metrics.cpp.o -c /Users/sofiagirardello/Desktop/ALB/FinalProject/src/metrics.cpp",
+  "file": "/Users/sofiagirardello/Desktop/ALB/FinalProject/src/metrics.cpp",
+  "output": "CMakeFiles/CVproject.dir/src/metrics.cpp.o"
+},
+{
+  "directory": "/Users/sofiagirardello/Desktop/ALB/FinalProject/build",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  -I/Users/sofiagirardello/Desktop/ALB/FinalProject/include -isystem /opt/homebrew/Cellar/opencv/4.10.0/include/opencv4 -g -std=gnu++11 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -o CMakeFiles/CVproject.dir/src/table.cpp.o -c /Users/sofiagirardello/Desktop/ALB/FinalProject/src/table.cpp",
+  "file": "/Users/sofiagirardello/Desktop/ALB/FinalProject/src/table.cpp",
+  "output": "CMakeFiles/CVproject.dir/src/table.cpp.o"
+},
+{
+  "directory": "/Users/sofiagirardello/Desktop/ALB/FinalProject/build",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  -I/Users/sofiagirardello/Desktop/ALB/FinalProject/include -isystem /opt/homebrew/Cellar/opencv/4.10.0/include/opencv4 -g -std=gnu++11 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -o CMakeFiles/CVproject.dir/src/trajectoryProjection.cpp.o -c /Users/sofiagirardello/Desktop/ALB/FinalProject/src/trajectoryProjection.cpp",
+  "file": "/Users/sofiagirardello/Desktop/ALB/FinalProject/src/trajectoryProjection.cpp",
+  "output": "CMakeFiles/CVproject.dir/src/trajectoryProjection.cpp.o"
+},
+{
+  "directory": "/Users/sofiagirardello/Desktop/ALB/FinalProject/build",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  -I/Users/sofiagirardello/Desktop/ALB/FinalProject/include -isystem /opt/homebrew/Cellar/opencv/4.10.0/include/opencv4 -g -std=gnu++11 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -o CMakeFiles/CVproject.dir/src/trajectoryTracking.cpp.o -c /Users/sofiagirardello/Desktop/ALB/FinalProject/src/trajectoryTracking.cpp",
+  "file": "/Users/sofiagirardello/Desktop/ALB/FinalProject/src/trajectoryTracking.cpp",
+  "output": "CMakeFiles/CVproject.dir/src/trajectoryTracking.cpp.o"
+},
+{
+  "directory": "/Users/sofiagirardello/Desktop/ALB/FinalProject/build",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  -I/Users/sofiagirardello/Desktop/ALB/FinalProject/include -isystem /opt/homebrew/Cellar/opencv/4.10.0/include/opencv4 -g -std=gnu++11 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -o CMakeFiles/CVproject.dir/src/videoHandler.cpp.o -c /Users/sofiagirardello/Desktop/ALB/FinalProject/src/videoHandler.cpp",
+  "file": "/Users/sofiagirardello/Desktop/ALB/FinalProject/src/videoHandler.cpp",
+  "output": "CMakeFiles/CVproject.dir/src/videoHandler.cpp.o"
+}
+]

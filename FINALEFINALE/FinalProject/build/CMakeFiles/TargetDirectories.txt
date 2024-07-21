@@ -1,0 +1,3 @@
+/Users/sofiagirardello/Desktop/ALB/FinalProject/build/CMakeFiles/CVproject.dir
+/Users/sofiagirardello/Desktop/ALB/FinalProject/build/CMakeFiles/edit_cache.dir
+/Users/sofiagirardello/Desktop/ALB/FinalProject/build/CMakeFiles/rebuild_cache.dir
