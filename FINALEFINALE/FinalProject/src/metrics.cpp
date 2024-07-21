@@ -54,7 +54,7 @@ std::vector<cv::Point2f> get_PR_table(const cv::Mat& pred_bb, const cv::Mat& tru
     if(totalGT == 0){
         cv::Point2f point(1.0,0.0);
         PR_points.push_back(point); //append point to array
-        std::cout << "No GT are present for class " << pred_class << std::endl;
+        //std::cout << "No GT are present for class " << pred_class << std::endl;
         return PR_points;
     }
 
@@ -114,7 +114,8 @@ std::vector<cv::Point2f> get_PR_table(const cv::Mat& pred_bb, const cv::Mat& tru
         // Otherwise if no pred but also no GT => TN (good)
         cv::Point2f point = (totalGT == 0) ? cv::Point2f(1.0,1.0) : cv::Point2f(1.0,0.0);
         PR_points.push_back(point); //append point to array
-        std::cout << "No predictions are present for class " << pred_class << std::endl;
+        //std::cout << "No predictions are present for class " << pred_class << std::endl;
+        //std::cout << "totalGT = " << totalGT << std::endl;
         return PR_points;
     }
 

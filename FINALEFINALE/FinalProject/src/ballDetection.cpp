@@ -31,7 +31,7 @@
 
 //------------ ADDITIONAL FUNCTIONS ------------
 
-void enhanceContrast(cv::Mat& frame) {
+cv::Mat enhanceContrast(cv::Mat& frame) {
 
     // Convert the frame to the LAB color space
     cv::Mat lab;
@@ -52,7 +52,9 @@ void enhanceContrast(cv::Mat& frame) {
     cv::merge(lab_channels, lab);
 
     // Convert the LAB image back to BGR color space
-    cv::cvtColor(lab, frame, cv::COLOR_Lab2BGR);
+    cv::Mat out; //NEW
+    cv::cvtColor(lab, out, cv::COLOR_Lab2BGR);
+    return out; //NEW
 }
 
 
@@ -197,13 +199,13 @@ void ballDetector::detectBalls(const cv::Mat& currentFrame, const cv::Mat& ROI, 
 void ballDetector::applyColourDetection(cv::Mat& frame, cv::Mat& colour_mask, std::vector<cv::Vec3f>& circles) {
 
     // Enhance contrast
-    enhanceContrast(frame);
+    cv::Mat edit = enhanceContrast(frame); //NEW
 
     // Define the size of the area around the center to compute the average color
     int areaSize = 50;
 
     // Perform colour thresholding to select just the table area (excluded balls)
-    colour_mask = averageColourThresholding(frame, areaSize);
+    colour_mask = averageColourThresholding(edit, areaSize); //NEW
 
     // Find the balls using Hough Tranform 
     /*

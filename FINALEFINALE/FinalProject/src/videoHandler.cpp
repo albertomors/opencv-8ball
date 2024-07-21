@@ -138,46 +138,41 @@ void videoHandler::process_video(int MIDSTEP_flag){
         // Runs only for first frame or every if MIDSTEP_flag==true
         if (i==1 || i==tot_frames || MIDSTEP_flag){
             frame_handler.detect_table(frame_i);
-            std::cout << "DET TABLE" << std::endl;
             if (i==1){
-                std::cout << "SAVE TABLE CORNERS" << std::endl;
                 frame_handler.save_table_corners();}
             frame_handler.detect_balls(frame_i);
-            std::cout << "DET BALLS" << std::endl;
             if (i==1){
-                std::cout << "INITIALIZE TRACKERS" << std::endl;
                 frame_handler.initializeTrackers(frame_i);
                 frame_handler.save_ids();
             }
         }
 
         // Runs for every frame
-        std::cout << "UPDATE TRACKERS" << std::endl;
         frame_handler.updateTrackers(frame_i);
         cv::Mat w_borders_on = frame_handler.draw_frame(frame_i);
         ret_frame = frame_handler.project(w_borders_on);
         cv::namedWindow("frame_i"); cv::imshow("frame_i", ret_frame);  
         cv::waitKey(1);
-        std::cout << "PROJ IMAGE" << std::endl;
         
         //SAVES ONLY FIRST AND LAST
         if (i==1 || i==tot_frames || MIDSTEP_flag){
             if (i==1){
-                std::cout << "SAVE FIRST" << std::endl;
                 this->ffirst_ret_bb = frame_handler.bbox_data;
                 this->ffirst_ret_mask = frame_handler.classification_res;
+                
             }
             else if(i==tot_frames){
-                std::cout << "SAVE LAST" << std::endl;
                 this->flast_ret_bb = frame_handler.bbox_data;
                 this->flast_ret_mask = frame_handler.classification_res;
             }
 
-            std::cout << "SHOW MASKS" << std::endl;
             cv::namedWindow("bb"); cv::imshow("bb", this->plot_bb(w_borders_on, frame_handler.bbox_data));
             cv::namedWindow("mask"); cv::imshow("mask", this->displayMask(frame_handler.classification_res));
-            std::cout << "Press any key to proceed..." << std::endl;
-            cv::waitKey(0);
+            
+            if (i==1 || i==tot_frames){
+                std::cout << "Press any key to proceed..." << std::endl;
+                cv::waitKey(0);
+            }
         }
 
         //-------------------------------------------------------
@@ -195,7 +190,7 @@ void videoHandler::process_video(int MIDSTEP_flag){
     std::cout << "Video saved at " << out_path << "." << std::endl;
 
     std::cout << "---METRICS-------------" << std::endl;
-    double mAP = compute_mAP(this->ffirst_bb,this->ffirst_ret_bb) + compute_mAP(this->flast_bb,this->flast_ret_bb);
+    double mAP = compute_mAP(this->ffirst_ret_bb,this->ffirst_bb) + compute_mAP(this->flast_ret_bb,this->flast_bb);
     std::cout << "mAP = " << mAP/2.0 << std::endl;
     
     std::vector<std::pair<cv::Mat, cv::Mat>> segmasks;
