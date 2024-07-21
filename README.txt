@@ -14,7 +14,7 @@ FinalProject/
 ├── build/                 # Build directory for compiled files
 │   ├── output/            # Directory for output videos
 ├── res/		   # Directory for resources
-|   ├── output/            # Directory for datasets and sample videos
+|   ├── dataset/           # Directory for datasets and sample videos
 ├── include/               # Header files
 ├── src/                   # Source code files
 ├── README.txt             # Project overview 
