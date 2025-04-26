@@ -7,6 +7,7 @@ The Billiard Ball Tracking System is a comprehensive tool designed to detect, cl
 
 ## Date: 2024-07-21 
 
+![Alt text](track3.jpg)
 
 ## Folder Structure
 
