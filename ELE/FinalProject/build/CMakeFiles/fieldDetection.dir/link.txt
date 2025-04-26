@@ -1,2 +1,0 @@
-/Library/Developer/CommandLineTools/usr/bin/ar qc libfieldDetection.a CMakeFiles/fieldDetection.dir/src/fieldDetection.cpp.o
-/Library/Developer/CommandLineTools/usr/bin/ranlib libfieldDetection.a
