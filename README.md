@@ -29,7 +29,7 @@ To look for all the output videos used as a test, check `build/output`
 FinalProject/
 ├── build/                 # Build directory for compiled files
     └── output/            # Directory for output videos
-├── res/		           # Directory for resources
+├── res/	           # Directory for resources
     └── Dataset/           # Directory for datasets and sample videos
 ├── include/               # Header files
 ├── src/                   # Source code files
