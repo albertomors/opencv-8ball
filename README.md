@@ -8,7 +8,7 @@ trajectories of the balls. These trajectories will be displayed in real-time thr
 a 2D top-view minimap, superimposed on the bottom-left corner of each video
 frame.
 
-[Read the paper](Cvreport.pdf)
+[Read the paper](CVreport.pdf)
 
 ## Authors
 Fresco Eleonora, Girardello Sofia, Morselli Alberto \
