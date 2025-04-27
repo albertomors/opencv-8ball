@@ -33,6 +33,11 @@ FinalProject/
     └── Dataset/           # Directory for datasets and sample videos
 ├── include/               # Header files
 ├── src/                   # Source code files
+├── LICENSE                # License information
 ├── README.txt             # Project overview 
 └── CMakeLists.txt         # Build configuration
 ```
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
